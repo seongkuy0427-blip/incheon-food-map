@@ -619,6 +619,7 @@
     document.body.style.overflow = 'hidden';
 
     var m = markers[id];
+    if (m) { m.setZIndexOffset(1000); }
     if (m && map) {
       var narrow = window.matchMedia('(max-width: 900px)').matches;
       map.panInside([r.lat, r.lng], narrow
