@@ -142,10 +142,10 @@
 
   function hubIcon(name) {
     return L.divIcon({
-      className: '',
-      html: '<div class="hub-pin"></div><div class="hub-label">' + name + '</div>',
-      iconSize: [10, 10],
-      iconAnchor: [5, 5]
+      className: 'hub-marker',
+      html: '<span class="hub-pin"></span><span class="hub-label">' + name + '</span>',
+      iconSize: [140, 18],
+      iconAnchor: [5, 9]
     });
   }
 
@@ -406,10 +406,12 @@
       return;
     }
     renderSummary('경로를 계산하는 중…');
+    state.routeSeq = (state.routeSeq || 0) + 1;
+    var seq = state.routeSeq;
     if (state.mode === 'car') {
       osrmRoute(a, b)
-        .then(function (route) { applyRoute(route); })
-        .catch(function () { applyRoute(straightFallback(a, b)); });
+        .then(function (route) { if (seq === state.routeSeq) applyRoute(route); })
+        .catch(function () { if (seq === state.routeSeq) applyRoute(straightFallback(a, b)); });
     } else {
       applyRoute(straightFallback(a, b));
     }
@@ -447,8 +449,9 @@
     layerHubs.clearLayers();
     if (state.mode !== 'transit') return;
     HUBS.forEach(function (h) {
-      L.marker([h.lat, h.lng], { icon: hubIcon(h.name), interactive: false, keyboard: false })
-        .addTo(layerHubs);
+      L.marker([h.lat, h.lng], {
+        icon: hubIcon(h.name), interactive: false, keyboard: false, zIndexOffset: -500
+      }).addTo(layerHubs);
     });
   }
 
@@ -553,7 +556,7 @@
       '<b>' + esc(state.start.name) + '</b> → <b>' + esc(state.end.name) + '</b><br>' +
       fmtDist(route.distance) + durTxt + ' · ' + modeTxt + '<br>' +
       radiusTxt + ' 맛집 <b>' + n + '곳</b>' +
-      (state.mode === 'transit' ? '<br><span class="err">대중교통 노선·환승 정보는 제공되지 않아 출발→도착을 잇는 직선 축으로 표시합니다. 실제 경로는 카드의 네이버·카카오 길찾기를 이용하세요.</span>' : '') +
+      (state.mode === 'transit' ? '<br><span class="note">대중교통 노선·환승 정보는 제공되지 않아 출발→도착을 잇는 직선 축과 주요 역·거점으로 표시합니다. 실제 경로는 카드의 네이버·카카오 길찾기를 이용하세요.</span>' : '') +
       (route.kind === 'straight' && state.mode === 'car' ? '<br><span class="err">경로 서버 응답이 없어 직선으로 표시했습니다.</span>' : '');
   }
 
