@@ -207,8 +207,13 @@
   }
 
   function renderFootNotes() {
+    var counts = { michelin: 0, blueribbon: 0, local: 0 };
+    state.data.forEach(function (r) { if (counts[r.tier] != null) counts[r.tier]++; });
+    el.tierNoteFoot.innerHTML = '<b>수록 ' + state.data.length + '곳</b> · 미쉐린 ' + counts.michelin +
+      ' · 블루리본 ' + counts.blueribbon + ' · 찐후기 ' + counts.local +
+      (state.meta.updated ? ' · 기준일 ' + state.meta.updated : '') + '<br>';
     if (state.meta.tierNote) {
-      el.tierNoteFoot.innerHTML = '<b>참고</b> ' + state.meta.tierNote;
+      el.tierNoteFoot.innerHTML += state.meta.tierNote;
     }
     if (state.meta.districtNote) {
       el.tierNoteFoot.innerHTML += '<br>' + state.meta.districtNote;
@@ -504,6 +509,7 @@
   }
 
   function renderList() {
+    updateFiltersSummary();
     var rows = visible();
     el.resultCount.textContent = rows.length + '곳';
     el.sortNote.textContent = state.route ? (state.mode === 'car' ? '출발→도착 순' : '축 진행 순') : '';
@@ -537,6 +543,18 @@
       m.addTo(layerRest);
       markers[r.id] = m;
     });
+  }
+
+  function updateFiltersSummary() {
+    if (!el.filtersSummary) return;
+    var tierCount = Object.keys(state.tiers).filter(function (t) { return state.tiers[t]; }).length;
+    var parts = [
+      state.mode === 'car' ? '자동차' : '대중교통',
+      state.radius > 0 ? '반경 ' + fmtDist(state.radius) : '반경 전체',
+      tierCount === 3 ? '등급 전체' : '등급 ' + tierCount + '종',
+      state.district === 'all' ? '전체 지역구' : state.district
+    ];
+    el.filtersSummary.textContent = parts.join(' · ');
   }
 
   function renderSummary(msg) {
@@ -621,6 +639,13 @@
 
   /* ── 이벤트 ───────────────────────────────────── */
   function bindEvents() {
+    if (el.filtersToggle) {
+      el.filtersToggle.addEventListener('click', function () {
+        var open = el.filters.classList.toggle('open');
+        el.filtersToggle.classList.toggle('open', open);
+        el.filtersToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
     el.startPick.addEventListener('click', function () { startPick('start'); });
     el.endPick.addEventListener('click', function () { startPick('end'); });
     el.startGps.addEventListener('click', function () { useGps('start'); });
@@ -729,6 +754,7 @@
       list: $('rest-list'), resultCount: $('result-count'), sortNote: $('sort-note'),
       detail: $('detail'), detailContent: $('detail-content'), detailClose: $('detail-close'),
       toast: $('toast'), fitRoute: $('fit-route'),
+      filters: $('filters'), filtersToggle: $('filters-toggle'), filtersSummary: $('filters-summary'),
       tierNoteFoot: $('tier-note-foot')
     };
 

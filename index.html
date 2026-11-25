@@ -56,6 +56,10 @@
         <div class="pick-note" id="pick-note" hidden>지도를 클릭해 <b>출발지</b>를 찍으세요. (Esc로 취소)</div>
       </section>
 
+      <button class="filters-toggle" id="filters-toggle" type="button" aria-expanded="false">
+        <span>필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
+      </button>
+      <div class="filters" id="filters">
       <section class="block">
         <div class="block-head">
           <h2>이동 수단</h2>
@@ -92,6 +96,7 @@
           </select>
         </div>
       </section>
+      </div>
 
       <section class="block summary-block">
         <div id="route-summary" class="route-summary">출발지와 도착지를 정해 주세요.</div>
