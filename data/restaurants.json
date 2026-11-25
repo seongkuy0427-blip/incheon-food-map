@@ -1,0 +1,1430 @@
+{
+  "meta": {
+    "region": "인천",
+    "regionLabel": "인천광역시",
+    "updated": "2026-11-26",
+    "coordSource": "카카오맵 장소 좌표(도로명주소 일치 확인)",
+    "districtNote": "2026.7.1 인천 행정체제 개편 반영: 중구 내륙+동구→제물포구, 중구 영종도→영종구, 서구→서해구, 검단→검단구",
+    "tierNote": "미쉐린 가이드 한국판(서울·부산)은 인천을 평가하지 않습니다. '미쉐린' 등급은 미쉐린 스타 레스토랑 출신 셰프·브랜드가 인천에서 운영하는 곳을 뜻합니다."
+  },
+  "restaurants": [
+    {
+      "id": "imperial-treasure",
+      "name": "임페리얼 트레져 (파라다이스시티)",
+      "region": "인천",
+      "district": "영종구",
+      "districtOld": "중구",
+      "dong": "운서동",
+      "tier": "michelin",
+      "tierLabel": "미쉐린 스타 브랜드",
+      "tierNote": "싱가포르 본사의 광동식 파인다이닝 브랜드로, 해외 지점이 미쉐린 스타를 받았습니다. 인천 매장 자체가 미쉐린 선정은 아닙니다.",
+      "category": "중식",
+      "address": "인천광역시 중구 영종해안남로321번길 186 파라다이스시티 플라자 1층",
+      "lat": 37.4373621,
+      "lng": 126.45659407,
+      "menus": [
+        {
+          "name": "북경오리 (베이징덕)",
+          "price": "사전 예약 권장"
+        },
+        {
+          "name": "딤섬 세트",
+          "price": "런치 코스 8만원대~"
+        },
+        {
+          "name": "광동식 바비큐 모둠",
+          "price": "10만원대"
+        }
+      ],
+      "reviewSummary": "파라다이스시티 1층의 광동식 파인다이닝으로, 북경오리와 딤섬, 바비큐가 대표 메뉴입니다. 호텔 다이닝답게 응대와 공간이 정돈되어 있고, 상차림이 정갈하다는 평이 많습니다. 점심·저녁 2부제로 운영해 코스 시간을 맞춰 방문하는 편이 좋습니다.",
+      "tips": "점심 12:00~15:00 / 저녁 18:00~22:00(라스트오더 21:00). 북경오리는 당일 조리 시간이 필요해 예약 시 함께 주문하는 것이 안전합니다. 호텔 주차장 이용.",
+      "phone": "032-729-2227",
+      "hours": "12:00-15:00, 18:00-22:00",
+      "closed": "연중무휴(호텔 운영 기준)",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%9E%84%ED%8E%98%EB%A6%AC%EC%96%BC%20%ED%8A%B8%EB%A0%88%EC%A0%B8%20%ED%8C%8C%EB%9D%BC%EB%8B%A4%EC%9D%B4%EC%8A%A4%EC%8B%9C%ED%8B%B0",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%9E%84%ED%8E%98%EB%A6%AC%EC%96%BC%20%ED%8A%B8%EB%A0%88%EC%A0%B8"
+    },
+    {
+      "id": "hongban",
+      "name": "홍반 (인스파이어 리조트)",
+      "region": "인천",
+      "district": "영종구",
+      "districtOld": "중구",
+      "dong": "운서동",
+      "tier": "michelin",
+      "tierLabel": "미쉐린 스타 출신 셰프",
+      "tierNote": "상하이 미쉐린 2스타 '임페리얼 트레져' 등에서 총괄 셰프를 지낸 쿠 콱 페이 셰프가 이끄는 매장입니다.",
+      "category": "중식",
+      "address": "인천광역시 중구 공항문화로 127 인스파이어 엔터테인먼트 리조트 오로라 2층",
+      "lat": 37.46505136,
+      "lng": 126.38988039,
+      "menus": [
+        {
+          "name": "송로버섯 오리",
+          "price": "시그니처"
+        },
+        {
+          "name": "차슈 번",
+          "price": "1만원 이하"
+        },
+        {
+          "name": "구운 돼지고기 페이스트리",
+          "price": "1만원대"
+        }
+      ],
+      "reviewSummary": "인스파이어 오로라 2층의 중식 캐주얼 다이닝으로, 북방 중국 요리를 캐주얼하게 풀어냅니다. 시그니처인 송로버섯 오리와 차슈 번, 딤섬류가 자주 언급됩니다. 리조트 안이라 예약 없이도 접근이 쉽지만 주말 저녁은 대기가 생깁니다.",
+      "tips": "리조트 내 매장이라 발렛·주차가 편합니다. 공연·행사 시간대와 겹치면 대기가 길어지니 30분 여유를 두세요.",
+      "phone": "",
+      "hours": "11:30-22:00(리조트 운영 기준)",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%99%8D%EB%B0%98%20%EC%9D%B8%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%96%B4",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%99%8D%EB%B0%98%20%EC%9D%B8%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%96%B4"
+    },
+    {
+      "id": "cafe-muguet",
+      "name": "카페 뮤게트",
+      "region": "인천",
+      "district": "부평구",
+      "districtOld": "부평구",
+      "dong": "부평동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "카페",
+      "address": "인천광역시 부평구 부평대로36번길 35 3층",
+      "lat": 37.49479142,
+      "lng": 126.72485424,
+      "menus": [
+        {
+          "name": "플랫버터",
+          "price": "6,000원대"
+        },
+        {
+          "name": "뮤게트 아인슈페너",
+          "price": "7,000원대"
+        },
+        {
+          "name": "커몬커몬 / 밀크티",
+          "price": "6,000원대"
+        }
+      ],
+      "reviewSummary": "부평역 인근 3층에 있는 모던하고 차분한 분위기의 커피전문점으로, 블루리본 서베이 인천 선정 카페입니다. 버터크림에 후추를 더한 '플랫버터'와 '뮤게트 아인슈페너'가 시그니처로 꼽힙니다. 커몬커몬·아즐랑밀크티 같은 베리에이션 메뉴도 함께 냅니다.",
+      "tips": "12:00~22:00 운영. 부평역 지하상가 쪽에서 도보권이라 주차보다 대중교통이 편합니다.",
+      "phone": "032-213-1331",
+      "hours": "12:00-22:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%B9%B4%ED%8E%98%20%EB%AE%A4%EA%B2%8C%ED%8A%B8",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%B9%B4%ED%8E%98%20%EB%AE%A4%EA%B2%8C%ED%8A%B8"
+    },
+    {
+      "id": "coffee-hwa",
+      "name": "커피화로스터스 본점",
+      "region": "인천",
+      "district": "연수구",
+      "districtOld": "연수구",
+      "dong": "송도동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "카페",
+      "address": "인천광역시 연수구 송도과학로27번길 70 롯데캐슬상가 107호",
+      "lat": 37.38620094,
+      "lng": 126.66719022,
+      "menus": [
+        {
+          "name": "핸드드립 / 브루잉 커피",
+          "price": "6,000원대"
+        },
+        {
+          "name": "플랫화이트",
+          "price": "5,500원대"
+        },
+        {
+          "name": "디저트(스콘·케이크)",
+          "price": "5,000원대"
+        }
+      ],
+      "reviewSummary": "송도에서 직접 로스팅하는 카페로, 불·꽃·빛을 뜻하는 '화' 세 가지 컨셉의 커피를 내세웁니다. 원두 향과 산미를 살린 브루잉 커피를 찾는 단골이 많고, 로스터리 특유의 차분한 공간이 장점으로 꼽힙니다. 평일 오전에도 손님이 꾸준합니다.",
+      "tips": "평일 08:00~20:00, 주말·공휴일 10:00~20:00. 오전 일찍 열어 출근 전 들르기 좋습니다. 상가 지하주차 이용.",
+      "phone": "0507-1365-7309",
+      "hours": "평일 08:00-20:00 / 주말 10:00-20:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%BB%A4%ED%94%BC%ED%99%94%EB%A1%9C%EC%8A%A4%ED%84%B0%EC%8A%A4",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%BB%A4%ED%94%BC%ED%99%94%EB%A1%9C%EC%8A%A4%ED%84%B0%EC%8A%A4"
+    },
+    {
+      "id": "chromite-coffee",
+      "name": "크로마이트커피",
+      "region": "인천",
+      "district": "연수구",
+      "districtOld": "연수구",
+      "dong": "옥련동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "2018년부터 블루리본 서베이 연속 선정",
+      "category": "카페",
+      "address": "인천광역시 연수구 청량로155번길 39-5",
+      "lat": 37.4212927,
+      "lng": 126.6505921,
+      "menus": [
+        {
+          "name": "브루잉 커피",
+          "price": "6,000원대"
+        },
+        {
+          "name": "베리에이션 커피",
+          "price": "6,000~7,000원"
+        },
+        {
+          "name": "티라미수·카스테라",
+          "price": "5,000원대"
+        }
+      ],
+      "reviewSummary": "옥련동의 오래된 주택을 개조한 카페로, 2018년부터 블루리본에 이름을 올린 곳입니다. 일반 베리에이션 커피와 함께 다양한 브루잉 커피를 취급하고, 티라미수·카스테라 같은 디저트도 꾸준한 인기를 얻고 있습니다. 조용하고 아늑한 실내가 특징입니다.",
+      "tips": "월~토 12:00~22:00(21:30 주문 마감), 일요일은 21:30까지. 주택가 골목이라 주차 공간이 넉넉하지 않습니다.",
+      "phone": "032-834-6506",
+      "hours": "월-토 12:00-22:00 / 일 21:30까지",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%81%AC%EB%A1%9C%EB%A7%88%EC%9D%B4%ED%8A%B8%EC%BB%A4%ED%94%BC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%81%AC%EB%A1%9C%EB%A7%88%EC%9D%B4%ED%8A%B8%EC%BB%A4%ED%94%BC"
+    },
+    {
+      "id": "sushi-iwa",
+      "name": "스시이와",
+      "region": "인천",
+      "district": "연수구",
+      "districtOld": "연수구",
+      "dong": "송도동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "일식",
+      "address": "인천광역시 연수구 센트럴로 194 더샵 센트럴파크2 C동 109호",
+      "lat": 37.39563749,
+      "lng": 126.63988443,
+      "menus": [
+        {
+          "name": "런치 오마카세",
+          "price": "70,000원"
+        },
+        {
+          "name": "룸 오마카세",
+          "price": "120,000원"
+        },
+        {
+          "name": "카운터 오마카세",
+          "price": "140,000원"
+        }
+      ],
+      "reviewSummary": "송도 센트럴파크 인근의 스시 오마카세로, 카운터 9석과 룸 4개를 운영합니다. 제철 네타를 쓰는 코스 구성과 가격 대비 만족도가 자주 언급되며, 룸이 많아 예약이 비교적 수월한 편입니다. 최근에는 타임 예약제에서 선착순 방식으로 바뀌어 코스 진행이 빠릅니다.",
+      "tips": "11:30~21:50(브레이크 15:00~17:30, 라스트오더 20:20). 캐치테이블 예약 필수. 매장 안내상 내비게이션은 '이미호아이래쉬 인천송도점'을 찍고 옆 지하주차장(C1~C2 구역)을 이용하면 됩니다.",
+      "phone": "0507-1386-5725",
+      "hours": "11:30-21:50 (브레이크 15:00-17:30)",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%8A%A4%EC%8B%9C%EC%9D%B4%EC%99%80",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%8A%A4%EC%8B%9C%EC%9D%B4%EC%99%80"
+    },
+    {
+      "id": "kwon-o-gil-noodle",
+      "name": "권오길손국수 본점",
+      "region": "인천",
+      "district": "검단구",
+      "districtOld": "서구",
+      "dong": "불로동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "분식·면",
+      "address": "인천광역시 서구 검단로 789 1층",
+      "lat": 37.61543656,
+      "lng": 126.68659832,
+      "menus": [
+        {
+          "name": "즉석 칼국수",
+          "price": "8,000원"
+        },
+        {
+          "name": "냉말이 국수",
+          "price": "7,000원"
+        },
+        {
+          "name": "조개칼국수",
+          "price": "9,000원"
+        }
+      ],
+      "reviewSummary": "2대째 국수공장을 운영하며 첨가제 없이 옛 맛을 재현하는 손국수집으로, 건물 위층에서 면을 뽑습니다. 테이블 모래시계로 즉석에서 익혀 먹는 칼국수와 여름 냉말이가 대표 메뉴입니다. 점심시간에는 자리가 없을 정도로 회전이 빠르게 돌아갑니다.",
+      "tips": "화요일 휴무. 검단로 대로변이라 주차는 매장 앞·주변 골목 이용. 근처 청라점도 같은 이름으로 운영합니다.",
+      "phone": "032-564-7541",
+      "hours": "매장 확인",
+      "closed": "화요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EA%B6%8C%EC%98%A4%EA%B8%B8%EC%86%90%EA%B5%AD%EC%88%98",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EA%B6%8C%EC%98%A4%EA%B8%B8%EC%86%90%EA%B5%AD%EC%88%98%20%EB%B3%B8%EC%A0%90"
+    },
+    {
+      "id": "geumsan-sikdang",
+      "name": "금산식당",
+      "region": "인천",
+      "district": "연수구",
+      "districtOld": "연수구",
+      "dong": "청학동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "해산물",
+      "address": "인천광역시 연수구 청능대로53번길 24-4",
+      "lat": 37.41770046,
+      "lng": 126.6736424,
+      "menus": [
+        {
+          "name": "밴댕이회",
+          "price": "2만원대"
+        },
+        {
+          "name": "밴댕이회무침",
+          "price": "2만원대"
+        },
+        {
+          "name": "병어·준치·한치 회무침",
+          "price": "3만원대"
+        }
+      ],
+      "reviewSummary": "인천 연안의 별미인 밴댕이를 제대로 내는 집으로, 회와 회무침, 병어·준치·한치 회무침이 대표입니다. 철에 맞춰 나오는 회의 기름기와 담백함이 좋다는 평이 많고, 동네 단골 비중이 높습니다. 주차가 어려운 골목 안에 있습니다.",
+      "tips": "화요일 정기휴무. 주차가 어려운 골목 안이라 대중교통이나 인근 공영주차장을 이용하세요.",
+      "phone": "032-818-1893",
+      "hours": "매장 확인",
+      "closed": "화요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EA%B8%88%EC%82%B0%EC%8B%9D%EB%8B%B9%20%EC%97%B0%EC%88%98",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EA%B8%88%EC%82%B0%EC%8B%9D%EB%8B%B9%20%EC%97%B0%EC%88%98%EC%A0%90"
+    },
+    {
+      "id": "songwon-sikdang",
+      "name": "송원식당",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "항동7가",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "해산물",
+      "address": "인천광역시 중구 연안부두로 24-1",
+      "lat": 37.45614775,
+      "lng": 126.60278067,
+      "menus": [
+        {
+          "name": "밴댕이무침",
+          "price": "2만원대"
+        },
+        {
+          "name": "밴댕이회",
+          "price": "2만원대"
+        },
+        {
+          "name": "돌게장",
+          "price": "2만원대"
+        }
+      ],
+      "reviewSummary": "1970년대에 문을 연 연안부두의 노포로, 생물 밴댕이만 써서 무침과 회를 냅니다. 밴댕이 특유의 기름진 맛과 돌게장이 함께 회자되는 집입니다. 아침부터 문을 열어 이른 시간 해장이나 시장 들르는 길에 들르기 좋습니다.",
+      "tips": "연안부두 종합어시장 인근이라 주차는 시장 공영주차장 이용. 이른 아침 영업 여부는 당일 전화 확인이 안전합니다.",
+      "phone": "032-884-2838",
+      "hours": "아침 영업(07:00경)-20:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%86%A1%EC%9B%90%EC%8B%9D%EB%8B%B9%20%EC%97%B0%EC%95%88%EB%B6%80%EB%91%90",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%86%A1%EC%9B%90%EC%8B%9D%EB%8B%B9%20%EC%97%B0%EC%95%88%EB%B6%80%EB%91%90"
+    },
+    {
+      "id": "gyeongin-myeonok",
+      "name": "경인면옥",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "내동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "분식·면",
+      "address": "인천광역시 중구 신포로46번길 38",
+      "lat": 37.47251706,
+      "lng": 126.62820324,
+      "menus": [
+        {
+          "name": "평양물냉면",
+          "price": "13,000원"
+        },
+        {
+          "name": "평양회비빔냉면",
+          "price": "16,000원"
+        },
+        {
+          "name": "손찐만두",
+          "price": "8,000원"
+        },
+        {
+          "name": "한우소고기 수육",
+          "price": "32,000원"
+        }
+      ],
+      "reviewSummary": "1946년 신포동에서 문을 열어 3대째 이어온 평양냉면 노포입니다. 한우 설깃으로 낸 맑은 육수에 메밀면을 말아내는데, 간장 베이스라 다른 평냉보다 간이 조금 있는 편이라는 평과 메밀향이 강하다는 평이 함께 나옵니다. 면이 뚝뚝 끊기는 식감, 담백한 수육·편육이 세트로 자주 언급됩니다.",
+      "tips": "11:00~20:20(브레이크 15:30~17:00, 라스트오더 20:00), 화요일 휴무(공휴일이면 영업). 점심 웨이팅이 있어 11시 직전 방문을 권합니다. 전용 주차는 없고 신포국제시장·내동 공영주차장을 이용합니다.",
+      "phone": "032-762-5770",
+      "hours": "11:00-20:20 (브레이크 15:30-17:00)",
+      "closed": "화요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EA%B2%BD%EC%9D%B8%EB%A9%B4%EC%98%A5",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EA%B2%BD%EC%9D%B8%EB%A9%B4%EC%98%A5"
+    },
+    {
+      "id": "cheongsil-hongsil-sinpo",
+      "name": "청실홍실 신포본점",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "신생동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "분식·면",
+      "address": "인천광역시 중구 우현로35번길 23-1",
+      "lat": 37.47086084,
+      "lng": 126.6250134,
+      "menus": [
+        {
+          "name": "메밀국수",
+          "price": "8,000원"
+        },
+        {
+          "name": "메밀우동",
+          "price": "9,000원"
+        },
+        {
+          "name": "만두",
+          "price": "7,000원"
+        }
+      ],
+      "reviewSummary": "1979년 개업 이후 메밀국수 한 가지로 인천에서 이름을 굳힌 집입니다. 멸치와 다시마로 낸 육수가 깔끔하고, 면은 쫄깃하면서 부드럽다는 평이 많습니다. 만두도 맛 평가가 높아 국수와 함께 주문하는 손님이 많습니다.",
+      "tips": "주차 불가에 가까운 골목이라 도보 방문을 권합니다. 여름철 점심에는 웨이팅이 생깁니다. 주안에도 같은 이름의 본점이 있습니다.",
+      "phone": "032-772-7760",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%B2%AD%EC%8B%A4%ED%99%8D%EC%8B%A4%20%EC%8B%A0%ED%8F%AC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%B2%AD%EC%8B%A4%ED%99%8D%EC%8B%A4%20%EC%8B%A0%ED%8F%AC%EB%B3%B8%EC%A0%90"
+    },
+    {
+      "id": "sin-chinatown",
+      "name": "신(新)",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "북성동3가",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "중식",
+      "address": "인천광역시 중구 차이나타운로 25",
+      "lat": 37.4769206,
+      "lng": 126.61925127,
+      "menus": [
+        {
+          "name": "찹쌀탕수육",
+          "price": "2만~3만원"
+        },
+        {
+          "name": "자춘권",
+          "price": "1만원대"
+        },
+        {
+          "name": "신자장면",
+          "price": "9,000원"
+        }
+      ],
+      "reviewSummary": "차이나타운에서 찹쌀탕수육으로 이름난 중식당으로, 유방녕 셰프의 찹쌀탕수육과 자춘권이 대표 메뉴입니다. 일반 짜장·짬뽕보다 코스 구성이 알차 가족 모임·직장 단체 예약으로 많이 찾습니다. 주말 점심은 예약이 안전합니다.",
+      "tips": "차이나타운 공영주차장 이용. 가족 모임·직장 단체 예약 가능. 차이나타운 특성상 주말 오후에는 주차 대기가 깁니다.",
+      "phone": "032-761-8889",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%8B%A0%20%EC%B0%A8%EC%9D%B4%EB%82%98%ED%83%80%EC%9A%B4%20%EC%A4%91%EC%8B%9D",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%8B%A0%20%EC%B0%A8%EC%9D%B4%EB%82%98%ED%83%80%EC%9A%B4"
+    },
+    {
+      "id": "jinheunggak",
+      "name": "진흥각",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "중앙동4가",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "블루리본 서베이 2025 인천 선정",
+      "category": "중식",
+      "address": "인천광역시 중구 신포로23번길 20",
+      "lat": 37.47170341,
+      "lng": 126.62392055,
+      "menus": [
+        {
+          "name": "짜장면",
+          "price": "8,000원"
+        },
+        {
+          "name": "짬뽕",
+          "price": "9,000원"
+        },
+        {
+          "name": "탕수육",
+          "price": "2만원대"
+        },
+        {
+          "name": "난자완스",
+          "price": "2만원대"
+        }
+      ],
+      "reviewSummary": "신포동 골목의 오래된 중식당으로, 짜장·짬뽕 같은 기본기와 탕수육·난자완스·당면잡채까지 고르게 맛있다는 평을 받습니다. 코스 구성이 잘 짜여 있어 여럿이 가도 실패가 적고, 오래된 홀과 단골 위주의 분위기가 그대로 남아 있습니다.",
+      "tips": "주차 불가. 신포시장·중앙동 공영주차장에서 도보. 점심 피크에는 자리가 빨리 차니 11시 30분 이전을 권합니다.",
+      "phone": "032-772-3058",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%A7%84%ED%9D%A5%EA%B0%81%20%EC%8B%A0%ED%8F%AC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%A7%84%ED%9D%A5%EA%B0%81%20%EC%8B%A0%ED%8F%AC"
+    },
+    {
+      "id": "panino-gusto",
+      "name": "파니노구스토",
+      "region": "인천",
+      "district": "남동구",
+      "districtOld": "남동구",
+      "dong": "구월동",
+      "tier": "blueribbon",
+      "tierLabel": "블루리본",
+      "tierNote": "2015년부터 블루리본 서베이 10년 연속 선정",
+      "category": "양식",
+      "address": "인천광역시 남동구 인하로507번길 14 탑플라자 2층",
+      "lat": 37.44381413,
+      "lng": 126.70323113,
+      "menus": [
+        {
+          "name": "마르게리따 피자",
+          "price": "20,000원"
+        },
+        {
+          "name": "포치드 비스마르크",
+          "price": "17,500원"
+        },
+        {
+          "name": "클라시카 라자냐",
+          "price": "20,000원"
+        }
+      ],
+      "reviewSummary": "구월동에서 10년 넘게 블루리본에 이름을 올린 이탈리안으로, 부팔라 치즈를 올린 나폴리 피자와 라자냐가 대표입니다. 평일 런치에는 피자를 1만원대에 낼 정도로 가격 접근성이 좋습니다. 데이트·모임 장소로 꾸준히 선택되는 곳입니다.",
+      "tips": "11:30~21:30. 탑플라자 2층이라 건물 주차장 이용. 평일 점심 런치 세트를 노리면 가성비가 좋습니다.",
+      "phone": "",
+      "hours": "11:30-21:30",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%8C%8C%EB%8B%88%EB%85%B8%EA%B5%AC%EC%8A%A4%ED%86%A0",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%8C%8C%EB%8B%88%EB%85%B8%EA%B5%AC%EC%8A%A4%ED%86%A0%20%EA%B5%AC%EC%9B%94%EC%A0%90"
+    },
+    {
+      "id": "sinpo-dakgangjeong",
+      "name": "신포닭강정 본점",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "신포동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 중구 우현로49번길 3",
+      "lat": 37.47158533,
+      "lng": 126.62817507,
+      "menus": [
+        {
+          "name": "닭강정 (순한맛)",
+          "price": "1만원대"
+        },
+        {
+          "name": "닭강정 (매운맛)",
+          "price": "1만원대"
+        },
+        {
+          "name": "반반 포장",
+          "price": "1만원대"
+        }
+      ],
+      "reviewSummary": "신포국제시장에서 줄이 끊이지 않는 닭강정 원조집입니다. 갓 튀긴 닭에 양념을 버무려 내는데, 식으면서 양념이 배어 쫀득해진다는 후기가 많습니다. 순한맛과 매운맛 반반 구성이 호불호가 적습니다.",
+      "tips": "포장 손님이 대부분입니다. 주말 오후에는 대기 30분 이상 걸리는 날도 있어 오전에 들르는 편이 낫습니다. 신포시장 공영주차장 이용.",
+      "phone": "",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%8B%A0%ED%8F%AC%EB%8B%AD%EA%B0%95%EC%A0%95",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%8B%A0%ED%8F%AC%EB%8B%AD%EA%B0%95%EC%A0%95%20%EB%B3%B8%EC%A0%90"
+    },
+    {
+      "id": "sinsinok",
+      "name": "신신옥",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "신포동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "일식",
+      "address": "인천광역시 중구 우현로49번길 7",
+      "lat": 37.47159361,
+      "lng": 126.62794102,
+      "menus": [
+        {
+          "name": "튀김우동",
+          "price": "7,000원"
+        },
+        {
+          "name": "장어튀김",
+          "price": "14,000원"
+        },
+        {
+          "name": "모둠튀김",
+          "price": "1만원대"
+        }
+      ],
+      "reviewSummary": "1958년부터 신포시장 한 자리를 지켜온 우동집으로, 진하게 우린 멸치 육수에 튀김우동과 붕장어 튀김을 냅니다. 옛 영화 포스터와 인천 옛 사진이 걸린 실내가 그대로 남아 있어 시간 여행 같은 분위기가 특징입니다. 관광객보다 단골이 많은 가게입니다.",
+      "tips": "12:00~19:30, 화요일 휴무. 메뉴가 우동과 튀김 위주로 단출합니다. 신포닭강정 바로 옆이라 함께 들르기 좋습니다.",
+      "phone": "",
+      "hours": "12:00-19:30",
+      "closed": "화요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%8B%A0%EC%8B%A0%EC%98%A5%20%EC%8B%A0%ED%8F%AC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%8B%A0%EC%8B%A0%EC%98%A5%20%EC%8B%A0%ED%8F%AC"
+    },
+    {
+      "id": "dabokjip",
+      "name": "다복집",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "신포동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 중구 우현로39번길 8-2",
+      "lat": 37.47095264,
+      "lng": 126.62697201,
+      "menus": [
+        {
+          "name": "스지탕",
+          "price": "33,000원"
+        },
+        {
+          "name": "모둠전",
+          "price": "20,000원"
+        }
+      ],
+      "reviewSummary": "신포동 골목의 스지탕 3대집으로, 오래 끓인 스지탕에 술 한잔 곁들이는 단골이 많습니다. 케첩을 곁들여 내는 모둠전도 함께 주문하는 대표 안주입니다. 세월이 그대로 남은 간판과 실내가 노포 분위기를 만듭니다.",
+      "tips": "월~토 16:00~22:00, 일요일 휴무. 저녁 술자리 위주 영업이라 낮 방문은 피하세요. 골목 안이라 주차는 신포시장 공영주차장 이용.",
+      "phone": "",
+      "hours": "월-토 16:00-22:00",
+      "closed": "일요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%8B%A4%EB%B3%B5%EC%A7%91%20%EC%8B%A0%ED%8F%AC%EB%8F%99",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%8B%A4%EB%B3%B5%EC%A7%91%20%EC%8B%A0%ED%8F%AC"
+    },
+    {
+      "id": "inhaui-jip",
+      "name": "인하의집",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "전동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 중구 우현로67번길 57",
+      "lat": 37.47575159,
+      "lng": 126.62875248,
+      "menus": [
+        {
+          "name": "삼치구이",
+          "price": "10,500원"
+        },
+        {
+          "name": "인하의집 세트(순두부)",
+          "price": "28,000원"
+        },
+        {
+          "name": "생선구이 모둠",
+          "price": "3만원대"
+        }
+      ],
+      "reviewSummary": "동인천 삼치골목을 만든 원조집으로, 50년 넘게 삼치구이에 막걸리를 곁들이는 방식으로 자리를 지켜왔습니다. 부담 없는 가격에 생선구이 상차림이 푸짐하다는 평이 많습니다. 골목 안 여러 집 중에서도 저녁 장사로 꾸준합니다.",
+      "tips": "화~금 16:00~24:00, 토·일 14:00~24:00, 월요일 휴무. 삼치거리 골목이라 주차는 동인천역·용동 공영주차장 이용.",
+      "phone": "",
+      "hours": "화-금 16:00-24:00 / 토-일 14:00-24:00",
+      "closed": "월요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%9D%B8%ED%95%98%EC%9D%98%EC%A7%91%20%EC%82%BC%EC%B9%98",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%9D%B8%ED%95%98%EC%9D%98%EC%A7%91%20%EC%82%BC%EC%B9%98%EA%B3%A8%EB%AA%A9"
+    },
+    {
+      "id": "pungmi",
+      "name": "풍미",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "선린동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "중식",
+      "address": "인천광역시 중구 차이나타운로 54-2",
+      "lat": 37.47477822,
+      "lng": 126.6184787,
+      "menus": [
+        {
+          "name": "소양동고",
+          "price": "2만원대"
+        },
+        {
+          "name": "고추간짜장",
+          "price": "1만원대"
+        },
+        {
+          "name": "난자완스",
+          "price": "2만원대"
+        }
+      ],
+      "reviewSummary": "차이나타운에서 4대째 이어온 중식당으로, 통표고버섯에 고기소를 채워 튀긴 '소양동고'가 대표 메뉴입니다. 일반 중식당에서 보기 힘든 요리가 많아 차이나타운다운 한 끼를 원할 때 적합합니다. 고추간짜장·난자완스도 자주 주문됩니다.",
+      "tips": "09:00~21:00, 설·추석 휴무. 차이나타운 공용주차장 이용. 입구에 단차가 있어 유모차·휠체어는 미리 확인하세요.",
+      "phone": "032-772-2680",
+      "hours": "09:00-21:00",
+      "closed": "설·추석 당일",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%92%8D%EB%AF%B8%20%EC%B0%A8%EC%9D%B4%EB%82%98%ED%83%80%EC%9A%B4",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%92%8D%EB%AF%B8%20%EC%B0%A8%EC%9D%B4%EB%82%98%ED%83%80%EC%9A%B4"
+    },
+    {
+      "id": "samgangok",
+      "name": "삼강옥",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "경동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 중구 참외전로158번길 1",
+      "lat": 37.47307601,
+      "lng": 126.63407899,
+      "menus": [
+        {
+          "name": "곰탕",
+          "price": "12,000원"
+        },
+        {
+          "name": "수육",
+          "price": "3만원대"
+        }
+      ],
+      "reviewSummary": "동인천·경동 일대에서 곰탕으로 이름난 노포로, 백년가게 목록에도 오른 집입니다. 맑게 우려낸 곰탕에 소금·파로 간을 맞춰 먹는 방식이고, 수육을 곁들이는 손님이 많습니다. 아침부터 문을 열어 해장 수요가 꾸준합니다.",
+      "tips": "동인천역 1번 출구 도보권. 오전 영업이 일찍 시작해 아침 식사로도 무난합니다. 주차는 동인천역 공영주차장 이용.",
+      "phone": "",
+      "hours": "아침~저녁(매장 확인)",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%82%BC%EA%B0%95%EC%98%A5%20%EA%B3%B0%ED%83%95",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%82%BC%EA%B0%95%EC%98%A5%20%EC%9D%B8%EC%B2%9C"
+    },
+    {
+      "id": "inhyun-samgyetang",
+      "name": "인현통닭삼계탕 동인천본점",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "인현동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 중구 참외전로 134 1층",
+      "lat": 37.4744456,
+      "lng": 126.63177965,
+      "menus": [
+        {
+          "name": "인현 삼계탕",
+          "price": "17,000원"
+        },
+        {
+          "name": "통닭",
+          "price": "2만원대"
+        },
+        {
+          "name": "인삼주",
+          "price": "서비스 제공"
+        }
+      ],
+      "reviewSummary": "동인천에서 통닭과 삼계탕을 함께 하는 집으로, 돌솥에 끓여 내는 담백한 삼계탕이 대표입니다. 국물 간이 세지 않아 소금으로 맞춰 먹는 방식이고, 닭이 도톰하다는 평이 많습니다. 기본 찬과 인삼주 한 잔이 함께 나옵니다.",
+      "tips": "화~일 10:30~21:00(라스트오더 20:00), 월요일 휴무, 브레이크 없음. 동인천역 1공영주차장 이용 시 1시간 무료(제휴 기준).",
+      "phone": "",
+      "hours": "화-일 10:30-21:00",
+      "closed": "월요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%9D%B8%ED%98%84%ED%86%B5%EB%8B%AD%EC%82%BC%EA%B3%84%ED%83%95%20%EB%8F%99%EC%9D%B8%EC%B2%9C",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%9D%B8%ED%98%84%ED%86%B5%EB%8B%AD%EC%82%BC%EA%B3%84%ED%83%95%20%EB%8F%99%EC%9D%B8%EC%B2%9C"
+    },
+    {
+      "id": "jeonrado-daewang-jogae",
+      "name": "전라도대왕조개 월미도본점",
+      "region": "인천",
+      "district": "제물포구",
+      "districtOld": "중구",
+      "dong": "북성동1가",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "해산물",
+      "address": "인천광역시 중구 월미문화로 27",
+      "lat": 37.47592856,
+      "lng": 126.59802389,
+      "menus": [
+        {
+          "name": "조개구이 모둠",
+          "price": "1인 3만원대"
+        },
+        {
+          "name": "조개찜",
+          "price": "3만~4만원"
+        },
+        {
+          "name": "해물칼국수 사리",
+          "price": "5,000원"
+        }
+      ],
+      "reviewSummary": "월미도 조개구이 거리에서 리뷰가 가장 많은 집 중 하나로, 가리비·키조개·소라 등 조개를 숯불에 구워 냅니다. 해감이 잘 되어 있고 조개가 신선하다는 평이 많으며, 남은 국물에 칼국수 사리를 넣어 마무리하는 방식이 인기입니다. 주말 저녁에는 대기가 깁니다.",
+      "tips": "11:30~23:50. 월미도 공영주차장 이용. 바닷바람이 강한 날은 실내석을 미리 요청하세요.",
+      "phone": "",
+      "hours": "11:30-23:50",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%A0%84%EB%9D%BC%EB%8F%84%EB%8C%80%EC%99%95%EC%A1%B0%EA%B0%9C%20%EC%9B%94%EB%AF%B8%EB%8F%84",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%A0%84%EB%9D%BC%EB%8F%84%EB%8C%80%EC%99%95%EC%A1%B0%EA%B0%9C"
+    },
+    {
+      "id": "byeongane-ongjin-naengmyeon",
+      "name": "변가네 옹진냉면",
+      "region": "인천",
+      "district": "미추홀구",
+      "districtOld": "미추홀구",
+      "dong": "주안동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 미추홀구 한나루로586번길 92",
+      "lat": 37.4576753,
+      "lng": 126.67712175,
+      "menus": [
+        {
+          "name": "물냉면",
+          "price": "10,000원"
+        },
+        {
+          "name": "비빔냉면",
+          "price": "10,000원"
+        },
+        {
+          "name": "녹두부침",
+          "price": "8,000원"
+        },
+        {
+          "name": "삼겹살수육",
+          "price": "2만원대"
+        }
+      ],
+      "reviewSummary": "주안에서 옹진식 냉면을 내는 노포로, 겨자와 식초를 직접 풀어 먹는 물냉면과 비빔냉면이 기본입니다. 녹두부침과 삼겹살수육을 함께 시키는 조합이 단골들 사이에서 정해져 있습니다. 여름에는 대기가 길어집니다.",
+      "tips": "한나루로 골목 안이라 주차 공간이 좁습니다. 점심 피크(12~13시) 전에 가는 편이 좋습니다.",
+      "phone": "",
+      "hours": "11:00-20:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%B3%80%EA%B0%80%EB%84%A4%20%EC%98%B9%EC%A7%84%EB%83%89%EB%A9%B4",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%B3%80%EA%B0%80%EB%84%A4%EC%98%B9%EC%A7%84%EB%83%89%EB%A9%B4"
+    },
+    {
+      "id": "inha-kalguksu",
+      "name": "인하칼국수",
+      "region": "인천",
+      "district": "미추홀구",
+      "districtOld": "미추홀구",
+      "dong": "용현동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 미추홀구 경인남길30번길 35-1 1층",
+      "lat": 37.45212446,
+      "lng": 126.65645106,
+      "menus": [
+        {
+          "name": "바지락칼국수",
+          "price": "8,500원"
+        },
+        {
+          "name": "들깨칼국수",
+          "price": "9,500원"
+        },
+        {
+          "name": "보리밥",
+          "price": "7,500원"
+        },
+        {
+          "name": "찐만두",
+          "price": "7,500원"
+        }
+      ],
+      "reviewSummary": "인하대 후문 쪽에서 가성비로 이름난 칼국수집입니다. 바지락이 넉넉히 들어간 칼국수와 나물이 곁들여 나오는 보리밥이 투 톱으로 꼽히고, 반찬 리필이 된다는 점도 자주 언급됩니다. 학생·직장인 점심 수요가 많아 회전이 빠릅니다.",
+      "tips": "11:00~21:00(브레이크 15:30~16:30, 라스트오더 20:00). 셀프바 운영. 학교 앞 상권이라 방학 기간에는 대기가 적습니다.",
+      "phone": "032-874-4067",
+      "hours": "11:00-21:00 (브레이크 15:30-16:30)",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%9D%B8%ED%95%98%EC%B9%BC%EA%B5%AD%EC%88%98",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%9D%B8%ED%95%98%EC%B9%BC%EA%B5%AD%EC%88%98"
+    },
+    {
+      "id": "miyeon-palbok",
+      "name": "미연팔복반점",
+      "region": "인천",
+      "district": "미추홀구",
+      "districtOld": "미추홀구",
+      "dong": "용현동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "중식",
+      "address": "인천광역시 미추홀구 인하로105번길 27",
+      "lat": 37.45157331,
+      "lng": 126.6602837,
+      "menus": [
+        {
+          "name": "양꼬치",
+          "price": "10,000원"
+        },
+        {
+          "name": "꿔바로우",
+          "price": "1만원대"
+        },
+        {
+          "name": "계란토마토 볶음",
+          "price": "1만원대"
+        }
+      ],
+      "reviewSummary": "인하대 후문에서 중국식 양꼬치와 꿔바로우를 내는 집으로, 중국인 손님 비중도 높습니다. 양꼬치 가격 대비 양이 넉넉하다는 평이 많고, 꿔바로우가 오히려 주력이라는 후기도 있습니다. 저녁 늦게까지 열어 술자리 겸 방문이 많습니다.",
+      "tips": "15:00~03:00. 주문이 몰리면 꿔바로우가 늦게 나올 수 있다는 후기가 있으니 시간 여유를 두세요. 골목 주차.",
+      "phone": "032-271-5678",
+      "hours": "15:00-03:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%AF%B8%EC%97%B0%ED%8C%94%EB%B3%B5%EB%B0%98%EC%A0%90",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%AF%B8%EC%97%B0%ED%8C%94%EB%B3%B5%EB%B0%98%EC%A0%90"
+    },
+    {
+      "id": "tobang-dakbal",
+      "name": "토방닭발",
+      "region": "인천",
+      "district": "미추홀구",
+      "districtOld": "미추홀구",
+      "dong": "주안동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 미추홀구 석바위로 134",
+      "lat": 37.45964251,
+      "lng": 126.68762945,
+      "menus": [
+        {
+          "name": "닭발(매운맛)",
+          "price": "1만원대"
+        },
+        {
+          "name": "닭발(순한맛)",
+          "price": "1만원대"
+        },
+        {
+          "name": "곁들임 메뉴",
+          "price": "5,000원대"
+        }
+      ],
+      "reviewSummary": "석바위 골목에서 오래 자리를 지킨 닭발집입니다. 숯불에 볶아 낸 매운 닭발로 술자리를 하는 골목 가게로, 늦은 저녁 손님이 많습니다. 골목 포차 분위기가 그대로 남아 있습니다.",
+      "tips": "저녁 영업 위주. 골목이 좁아 주차는 석바위 공영주차장 이용을 권합니다.",
+      "phone": "032-421-8848",
+      "hours": "저녁 영업(매장 확인)",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%86%A0%EB%B0%A9%EB%8B%AD%EB%B0%9C%20%EC%A3%BC%EC%95%88",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%86%A0%EB%B0%A9%EB%8B%AD%EB%B0%9C%20%EC%A3%BC%EC%95%88"
+    },
+    {
+      "id": "buwon-galbi",
+      "name": "부원갈비",
+      "region": "인천",
+      "district": "미추홀구",
+      "districtOld": "미추홀구",
+      "dong": "주안동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 미추홀구 경인로425번길 23",
+      "lat": 37.45924898,
+      "lng": 126.68736886,
+      "menus": [
+        {
+          "name": "돼지갈비",
+          "price": "1인 1만5천원대"
+        },
+        {
+          "name": "생삼겹살",
+          "price": "1인 1만4천원대"
+        }
+      ],
+      "reviewSummary": "석바위 먹자골목에서 돼지갈비를 구워 내는 동네 고깃집입니다. 메뉴가 단출해 고기 맛으로 승부하는 편이고, 가까운 단골이 많은 곳입니다. 미추홀구 음식특화거리 안에 있어 골목 투어와 함께 들르기 좋습니다.",
+      "tips": "골목 안이라 주차가 어렵습니다. 저녁 7시 이후에는 자리가 없을 수 있어 전화 확인이 좋습니다.",
+      "phone": "032-433-1690",
+      "hours": "저녁 영업(매장 확인)",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%B6%80%EC%9B%90%EA%B0%88%EB%B9%84%20%EC%A3%BC%EC%95%88",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%B6%80%EC%9B%90%EA%B0%88%EB%B9%84%20%EC%A3%BC%EC%95%88"
+    },
+    {
+      "id": "namchon-kalguksu",
+      "name": "남촌칼국수",
+      "region": "인천",
+      "district": "남동구",
+      "districtOld": "남동구",
+      "dong": "논현동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 남동구 장도로 67",
+      "lat": 37.39975206,
+      "lng": 126.73764,
+      "menus": [
+        {
+          "name": "해물칼국수",
+          "price": "9,000원"
+        },
+        {
+          "name": "손만두",
+          "price": "7,000원"
+        },
+        {
+          "name": "겉절이",
+          "price": "5,000원"
+        }
+      ],
+      "reviewSummary": "소래포구 어시장 입구에 있는 칼국수집으로, 직접 숙성해 뽑은 면과 얇은 피의 만두가 대표입니다. 국산 재료로 담근 겉절이와 함께 먹는 조합이 이 집의 특징으로 꼽힙니다. 홀이 넓어 단체 모임에도 무리가 없습니다.",
+      "tips": "10:30~21:00, 브레이크 없음. 공영주차장 50대(무료). 여름휴가 기간에는 문을 닫으니 방문 전 확인하세요.",
+      "phone": "032-442-1808",
+      "hours": "10:30-21:00",
+      "closed": "여름휴가 기간 외 연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%82%A8%EC%B4%8C%EC%B9%BC%EA%B5%AD%EC%88%98%20%EC%86%8C%EB%9E%98",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%82%A8%EC%B4%8C%EC%B9%BC%EA%B5%AD%EC%88%98%20%EC%86%8C%EB%9E%98"
+    },
+    {
+      "id": "haenam-susan",
+      "name": "해남수산 (소래포구)",
+      "region": "인천",
+      "district": "남동구",
+      "districtOld": "남동구",
+      "dong": "논현동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "해산물",
+      "address": "인천광역시 남동구 소래역로 12 소래포구 종합어시장 34호",
+      "lat": 37.3987643,
+      "lng": 126.73712732,
+      "menus": [
+        {
+          "name": "대방어 2인 세트",
+          "price": "60,000원"
+        },
+        {
+          "name": "광어+우럭 2인 세트",
+          "price": "45,000원"
+        },
+        {
+          "name": "조개찜 2인 세트",
+          "price": "70,000원"
+        }
+      ],
+      "reviewSummary": "소래포구 종합어시장 안에서 대방어와 모둠회 세트로 알려진 횟집입니다. 회와 함께 스끼다시가 10가지 이상 나오는 구성이 가성비로 자주 언급되고, 겨울 대방어 철에는 예약이 빨리 찹니다. 단체 예약과 포장이 모두 가능합니다.",
+      "tips": "08:00~03:00(시즌·평일 변동). 소래포구역 2번 출구 도보 5분, 소래역로 12로 진입하면 주차장과 바로 연결됩니다. 단체 예약·포장 가능.",
+      "phone": "0507-1325-5180",
+      "hours": "08:00-03:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%95%B4%EB%82%A8%EC%88%98%EC%82%B0%20%EC%86%8C%EB%9E%98%ED%8F%AC%EA%B5%AC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%95%B4%EB%82%A8%EC%88%98%EC%82%B0%20%EC%86%8C%EB%9E%98%ED%8F%AC%EA%B5%AC"
+    },
+    {
+      "id": "kimpanjo-dakgangjeong",
+      "name": "김판조닭강정 장남본점",
+      "region": "인천",
+      "district": "부평구",
+      "districtOld": "부평구",
+      "dong": "부평동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 부평구 주부토로22번길 30 1층",
+      "lat": 37.4958692,
+      "lng": 126.7257052,
+      "menus": [
+        {
+          "name": "닭강정 (한 마리)",
+          "price": "1만원 안팎"
+        },
+        {
+          "name": "닭강정 (반 마리)",
+          "price": "5,000원대"
+        },
+        {
+          "name": "중국식 꽈배기(시장 내)",
+          "price": "2,000원대"
+        }
+      ],
+      "reviewSummary": "부평종합시장에서 30년 넘게 자리를 지킨 닭강정집으로, 저렴한 가격에 겉은 바삭하고 속은 부드럽다는 평이 꾸준합니다. 시장 안이라 포장 손님이 대부분이고, 튀김 직후 양념을 버무려 냅니다. 같은 시장의 중국식 꽈배기집과 함께 들르는 코스가 흔합니다.",
+      "tips": "09:30~20:30, 월요일 휴무. 부평역 5번 출구 도보 7분, 부평시장 공영주차장 이용.",
+      "phone": "032-525-4792",
+      "hours": "09:30-20:30",
+      "closed": "월요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EA%B9%80%ED%8C%90%EC%A1%B0%EB%8B%AD%EA%B0%95%EC%A0%95",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EA%B9%80%ED%8C%90%EC%A1%B0%EB%8B%AD%EA%B0%95%EC%A0%95"
+    },
+    {
+      "id": "buksaetong",
+      "name": "북새통",
+      "region": "인천",
+      "district": "부평구",
+      "districtOld": "부평구",
+      "dong": "갈산동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "분식·면",
+      "address": "인천광역시 부평구 갈월서로 6",
+      "lat": 37.50814343,
+      "lng": 126.72294585,
+      "menus": [
+        {
+          "name": "즉석떡볶이",
+          "price": "6,000원(착한가격)"
+        },
+        {
+          "name": "튀김·순대",
+          "price": "3,000~5,000원"
+        }
+      ],
+      "reviewSummary": "1995년부터 부평구청역 인근에서 운영해온 분식집으로, 즉석떡볶이가 행정안전부 착한가격업소 메뉴로 지정될 만큼 가격이 낮습니다. 국물 떡볶이에 튀김·순대를 곁들이는 동네 분식 그대로의 구성입니다. 점심에는 학생과 직장인이 함께 몰립니다.",
+      "tips": "부평구청역 도보 3분. 현금 위주 운영 여부는 매장 확인. 오후 3시 전후로 재료가 떨어지면 일찍 닫기도 합니다.",
+      "phone": "",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%B6%81%EC%83%88%ED%86%B5%20%EB%B6%80%ED%8F%89",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%B6%81%EC%83%88%ED%86%B5%20%EB%B6%80%ED%8F%89"
+    },
+    {
+      "id": "peoples-pizza",
+      "name": "피플즈",
+      "region": "인천",
+      "district": "부평구",
+      "districtOld": "부평구",
+      "dong": "부평동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "양식",
+      "address": "인천광역시 부평구 시장로30번길 11 2층",
+      "lat": 37.4932235,
+      "lng": 126.72633455,
+      "menus": [
+        {
+          "name": "피자(L)",
+          "price": "2만원대"
+        },
+        {
+          "name": "파스타",
+          "price": "1만5천원대"
+        }
+      ],
+      "reviewSummary": "부평시장 인근에서 20년 넘게 영업해온 피자집입니다. 동네 단골과 포장 주문이 많은 노포형 양식집으로, 가격대가 높지 않아 가족 단위 주문이 많습니다.",
+      "tips": "2층에 있어 간판을 보고 올라가야 합니다. 포장·배달 비중이 높아 전화 주문 후 픽업이 빠릅니다.",
+      "phone": "",
+      "hours": "매장 확인",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%ED%94%BC%ED%94%8C%EC%A6%88%20%EB%B6%80%ED%8F%89",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%ED%94%BC%ED%94%8C%EC%A6%88%20%EB%B6%80%ED%8F%89"
+    },
+    {
+      "id": "cheorwon-haejangguk",
+      "name": "철원양평해장국",
+      "region": "인천",
+      "district": "부평구",
+      "districtOld": "부평구",
+      "dong": "청천동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 부평구 청농로 2",
+      "lat": 37.52245233,
+      "lng": 126.69102956,
+      "menus": [
+        {
+          "name": "콩나물해장국",
+          "price": "6,000원"
+        },
+        {
+          "name": "선지해장국",
+          "price": "8,000원"
+        },
+        {
+          "name": "내장탕",
+          "price": "12,000원"
+        },
+        {
+          "name": "수육(중)",
+          "price": "25,000원"
+        }
+      ],
+      "reviewSummary": "청천동에서 아침부터 해장국을 내는 집으로, 콩나물해장국과 선지해장국이 기본입니다. 내장탕과 수육을 곁들여 점심 식사로 먹는 손님이 많고, 국물이 진하고 양이 넉넉하다는 평이 꾸준합니다. 좌석이 100석이 넘어 단체 식사도 가능합니다.",
+      "tips": "아침 일찍 영업. 청농로 대로변이라 주차가 비교적 수월합니다.",
+      "phone": "032-501-0353",
+      "hours": "아침~저녁(매장 확인)",
+      "closed": "매장 확인",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%B2%A0%EC%9B%90%EC%96%91%ED%8F%89%ED%95%B4%EC%9E%A5%EA%B5%AD%20%EC%B2%AD%EC%B2%9C",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%B2%A0%EC%9B%90%EC%96%91%ED%8F%89%ED%95%B4%EC%9E%A5%EA%B5%AD%20%EB%B6%80%ED%8F%89"
+    },
+    {
+      "id": "sigol-hanwoo-cheongna",
+      "name": "시골한우시골돼지 청라점",
+      "region": "인천",
+      "district": "서해구",
+      "districtOld": "서구",
+      "dong": "청라동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 서구 청라커낼로260번길 7-19 에이스프라자 1층",
+      "lat": 37.53252784,
+      "lng": 126.64656654,
+      "menus": [
+        {
+          "name": "제주 돼지 목살",
+          "price": "1인 1만8천원대"
+        },
+        {
+          "name": "투뿔 한우 등심",
+          "price": "1인 4만원대"
+        },
+        {
+          "name": "된장찌개·냉면",
+          "price": "8,000원대"
+        }
+      ],
+      "reviewSummary": "청라커낼웨이 수변 쪽에 있는 고깃집으로, 제주 돼지와 투뿔 한우를 참숯에 구워 냅니다. 촘촘한 칼집과 불향, 멜젓·갈치속젓·삼광와사비 조합이 이 집의 특징으로 꼽힙니다. 브레이크타임 없이 늦게까지 열어 저녁 약속 장소로 많이 쓰입니다.",
+      "tips": "12:00~22:50, 브레이크 없음. 건물 주차장 이용. 주말 저녁은 예약이 안전합니다.",
+      "phone": "0507-1394-9228",
+      "hours": "12:00-22:50",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%8B%9C%EA%B3%A8%ED%95%9C%EC%9A%B0%EC%8B%9C%EA%B3%A8%EB%8F%BC%EC%A7%80%20%EC%B2%AD%EB%9D%BC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%8B%9C%EA%B3%A8%ED%95%9C%EC%9A%B0%EC%8B%9C%EA%B3%A8%EB%8F%BC%EC%A7%80%20%EC%B2%AD%EB%9D%BC%EC%A0%90"
+    },
+    {
+      "id": "samdae-cheonggukjang",
+      "name": "삼대청국장 청라본점",
+      "region": "인천",
+      "district": "서해구",
+      "districtOld": "서구",
+      "dong": "청라동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 서구 청라에메랄드로41번길 24 1층",
+      "lat": 37.52927548,
+      "lng": 126.65579999,
+      "menus": [
+        {
+          "name": "소고기청국장",
+          "price": "12,000원"
+        },
+        {
+          "name": "삼대청국장",
+          "price": "9,000원"
+        },
+        {
+          "name": "콩비지",
+          "price": "9,000원"
+        }
+      ],
+      "reviewSummary": "3대째 재래식 방식으로 청국장을 빚는 집으로, 가마솥에 띄운 청국장과 직접 담근 김치·비빔나물이 함께 나옵니다. 국산 콩만 써서 구수한 향이 강하다는 평이 많습니다. 청라에서 한식 백반을 찾을 때 자주 꼽히는 곳입니다.",
+      "tips": "11:00~22:00(브레이크 15:30~17:00), 일요일 휴무. 매장 앞 주차 가능.",
+      "phone": "032-571-4455",
+      "hours": "11:00-22:00 (브레이크 15:30-17:00)",
+      "closed": "일요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%82%BC%EB%8C%80%EC%B2%AD%EA%B5%AD%EC%9E%A5%20%EC%B2%AD%EB%9D%BC",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%82%BC%EB%8C%80%EC%B2%AD%EA%B5%AD%EC%9E%A5%20%EC%B2%AD%EB%9D%BC%EB%B3%B8%EC%A0%90"
+    },
+    {
+      "id": "cheongna-eobo",
+      "name": "청라어보",
+      "region": "인천",
+      "district": "서해구",
+      "districtOld": "서구",
+      "dong": "청라동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 서구 중봉대로586번길 9-23 2층",
+      "lat": 37.53267686,
+      "lng": 126.65245583,
+      "menus": [
+        {
+          "name": "국내산 갈치구이정식",
+          "price": "2만원대"
+        },
+        {
+          "name": "모둠조림정식",
+          "price": "2만원대"
+        },
+        {
+          "name": "가자미구이정식",
+          "price": "1만8천원대"
+        }
+      ],
+      "reviewSummary": "청라커낼웨이 수로변에 있는 생선구이·돌솥밥 전문점으로, 갈치·가자미·임연수 구이 정식이 대표입니다. 생선을 제철에 맞춰 내고 돌솥밥과 함께 한 상이 차려지는 구성이 좋다는 평이 많습니다. 가족 외식 장소로 꾸준히 선택됩니다.",
+      "tips": "11:00~22:00(라스트오더 21:00). 식당 앞 전용 주차장이 있어 수변 산책과 함께 들르기 좋습니다.",
+      "phone": "",
+      "hours": "11:00-22:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%EC%96%B4%EB%B3%B4",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%B2%AD%EB%9D%BC%EC%96%B4%EB%B3%B4"
+    },
+    {
+      "id": "myeoncheon-galbi",
+      "name": "면천갈비 인천점",
+      "region": "인천",
+      "district": "검단구",
+      "districtOld": "서구",
+      "dong": "당하동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 서구 청마로112번길 8 1층",
+      "lat": 37.58713184,
+      "lng": 126.67617617,
+      "menus": [
+        {
+          "name": "돼지왕갈비",
+          "price": "12,000원"
+        },
+        {
+          "name": "갈비탕",
+          "price": "9,000원"
+        },
+        {
+          "name": "냉면",
+          "price": "7,000원"
+        }
+      ],
+      "reviewSummary": "검단 당하동에서 돼지왕갈비와 갈비탕을 내는 집으로, 두툼하게 썬 왕갈비를 직화 숯불에 구워 냅니다. 양념이 밴 살코기와 사골로 우린 갈비탕이 함께 평가받는 곳입니다. 연중무휴로 아침 10시부터 열어 이른 점심에도 무리가 없습니다.",
+      "tips": "10:00~22:00, 연중무휴. 단체석이 있어 가족 모임에 무난합니다. 매장 앞 주차.",
+      "phone": "0507-1377-7336",
+      "hours": "10:00-22:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%A9%B4%EC%B2%9C%EA%B0%88%EB%B9%84%20%EC%9D%B8%EC%B2%9C",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%A9%B4%EC%B2%9C%EA%B0%88%EB%B9%84%20%EC%9D%B8%EC%B2%9C%EC%A0%90"
+    },
+    {
+      "id": "muhan-nakji",
+      "name": "무한낙지",
+      "region": "인천",
+      "district": "계양구",
+      "districtOld": "계양구",
+      "dong": "작전동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "한식",
+      "address": "인천광역시 계양구 봉오대로 685 가나빌딩 1층",
+      "lat": 37.53097273,
+      "lng": 126.72515583,
+      "menus": [
+        {
+          "name": "산낙지갈비전골(중)",
+          "price": "82,000원"
+        },
+        {
+          "name": "낙지보쌈(소)",
+          "price": "47,000원"
+        },
+        {
+          "name": "낙지볶음(1인)",
+          "price": "14,000원"
+        }
+      ],
+      "reviewSummary": "작전동에서 20년 넘게 낙지 요리를 해온 집으로, 산낙지갈비전골과 낙지보쌈이 대표입니다. 낙지가 두툼하고 양이 많다는 평이 많고, 룸이 있어 가족 모임·회식 장소로도 쓰입니다. 매운맛 조절을 요청할 수 있습니다.",
+      "tips": "10:00~22:00, 월요일 휴무. 무료 주차 가능, 룸 예약은 전화로. 인원이 많으면 전골 대자를 미리 주문하세요.",
+      "phone": "032-544-8555",
+      "hours": "10:00-22:00",
+      "closed": "월요일",
+      "naverMapUrl": "https://map.naver.com/p/search/%EB%AC%B4%ED%95%9C%EB%82%99%EC%A7%80%20%EA%B3%84%EC%96%91",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EB%AC%B4%ED%95%9C%EB%82%99%EC%A7%80%20%EC%9E%91%EC%A0%84"
+    },
+    {
+      "id": "yurae-sushi",
+      "name": "유래초밥 계산점",
+      "region": "인천",
+      "district": "계양구",
+      "districtOld": "계양구",
+      "dong": "계산동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "일식",
+      "address": "인천광역시 계양구 계산로 128 1층",
+      "lat": 37.53718892,
+      "lng": 126.7264059,
+      "menus": [
+        {
+          "name": "생선회(중)",
+          "price": "32,000원"
+        },
+        {
+          "name": "도미머리 소금구이",
+          "price": "50,000원"
+        },
+        {
+          "name": "활어초밥 15피스",
+          "price": "1만원대"
+        }
+      ],
+      "reviewSummary": "이름은 초밥집이지만 숙성회와 통도미찜으로 더 알려진 계산동 노포입니다. 도톰하게 썬 숙성회와 스끼다시 상차림이 가성비 좋다는 후기가 많고, 좁은 입구와 달리 안쪽에 다찌석과 테이블이 나뉘어 있습니다. 방송 소개 이후 손님이 늘었습니다.",
+      "tips": "13:00~23:00(라스트오더 22:30). 주차 공간이 매우 협소해 경인교대입구역 도보나 인근 공영주차장을 권합니다. 재료 소진 시 조기 마감.",
+      "phone": "032-551-1995",
+      "hours": "13:00-23:00",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EC%9C%A0%EB%9E%98%EC%B4%88%EB%B0%A5%20%EA%B3%84%EC%82%B0",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EC%9C%A0%EB%9E%98%EC%B4%88%EB%B0%A5%20%EA%B3%84%EC%82%B0%EC%A0%90"
+    },
+    {
+      "id": "geummun-do",
+      "name": "금문도",
+      "region": "인천",
+      "district": "계양구",
+      "districtOld": "계양구",
+      "dong": "작전동",
+      "tier": "local",
+      "tierLabel": "찐후기",
+      "category": "중식",
+      "address": "인천광역시 계양구 효서로 268",
+      "lat": 37.5278459,
+      "lng": 126.72577369,
+      "menus": [
+        {
+          "name": "삼선고추짬뽕",
+          "price": "12,000원"
+        },
+        {
+          "name": "삼선간짜장",
+          "price": "12,000원"
+        },
+        {
+          "name": "탕수육",
+          "price": "22,000원"
+        },
+        {
+          "name": "전가복",
+          "price": "80,000원"
+        }
+      ],
+      "reviewSummary": "작전동에서 30년 넘게 운영한 중식당으로, 삼선고추짬뽕과 삼선간짜장이 대표입니다. 해물을 넉넉히 넣은 짬뽕 국물과 불맛 나는 간짜장이 꾸준히 언급되고, 전가복 같은 큰 요리도 가능해 회식 장소로도 쓰입니다.",
+      "tips": "11:00~21:30. 작전역 도보 5분. 포장·예약 가능, 주차는 매장 앞과 인근 공영주차장 이용.",
+      "phone": "032-544-6665",
+      "hours": "11:00-21:30",
+      "closed": "연중무휴",
+      "naverMapUrl": "https://map.naver.com/p/search/%EA%B8%88%EB%AC%B8%EB%8F%84%20%EC%9E%91%EC%A0%84",
+      "kakaoMapUrl": "https://map.kakao.com/link/search/%EA%B8%88%EB%AC%B8%EB%8F%84%20%EC%9E%91%EC%A0%84"
+    }
+  ]
+}

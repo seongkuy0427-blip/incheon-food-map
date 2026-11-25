@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>인천 동선 맛집 지도</title>
+<meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을 등급·거리별로 골라 주는 지도." />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🗺️</span>
+      <div class="brand-text">
+        <h1>인천 동선 맛집 지도</h1>
+        <p class="sub">가는 길 위에서 고르는 인천 맛집 · 블루리본·찐후기 40곳</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <label class="region-wrap">
+        <span class="sr-only">지역</span>
+        <select id="region-select" aria-label="지역 선택">
+          <option value="인천">인천광역시</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel" id="panel">
+      <section class="block">
+        <div class="route-row">
+          <div class="field">
+            <label for="start-input">출발</label>
+            <div class="input-wrap">
+              <input id="start-input" type="text" placeholder="장소·주소·역 검색" autocomplete="off" />
+              <button class="mini" id="start-pick" type="button" title="지도에서 출발지 찍기">지도</button>
+              <button class="mini icon" id="start-gps" type="button" title="현재 위치를 출발지로">📍</button>
+            </div>
+            <div class="results" id="start-results" hidden></div>
+          </div>
+          <div class="field">
+            <label for="end-input">도착</label>
+            <div class="input-wrap">
+              <input id="end-input" type="text" placeholder="장소·주소·역 검색" autocomplete="off" />
+              <button class="mini" id="end-pick" type="button" title="지도에서 도착지 찍기">지도</button>
+              <button class="mini icon" id="end-gps" type="button" title="현재 위치를 도착지로">📍</button>
+            </div>
+            <div class="results" id="end-results" hidden></div>
+          </div>
+        </div>
+        <div class="chips" id="hub-chips" aria-label="주요 거점 빠른 선택"></div>
+        <div class="pick-note" id="pick-note" hidden>지도를 클릭해 <b>출발지</b>를 찍으세요. (Esc로 취소)</div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>이동 수단</h2>
+        </div>
+        <div class="seg" role="group" aria-label="이동 수단">
+          <button class="seg-btn active" data-mode="car" type="button">🚗 자동차</button>
+          <button class="seg-btn" data-mode="transit" type="button">🚇 대중교통</button>
+        </div>
+        <p class="hint" id="mode-hint">도로 경로를 따라 실제 주행 동선을 계산합니다.</p>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>동선 반경</h2>
+          <span class="count" id="result-count"></span>
+        </div>
+        <div class="seg small" role="group" aria-label="동선 반경">
+          <button class="seg-btn" data-radius="500" type="button">500m</button>
+          <button class="seg-btn active" data-radius="1000" type="button">1km</button>
+          <button class="seg-btn" data-radius="2000" type="button">2km</button>
+          <button class="seg-btn" data-radius="0" type="button">전체</button>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>등급</h2>
+        </div>
+        <div class="chips tier-chips" id="tier-chips" role="group" aria-label="등급 필터"></div>
+        <div class="district-row">
+          <label for="district-select">지역구</label>
+          <select id="district-select">
+            <option value="all">전체 지역구</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="block summary-block">
+        <div id="route-summary" class="route-summary">출발지와 도착지를 정해 주세요.</div>
+      </section>
+
+      <section class="block list-block">
+        <div class="block-head">
+          <h2>동선 위 맛집</h2>
+          <span class="sort-note" id="sort-note"></span>
+        </div>
+        <div id="rest-list" class="rest-list"></div>
+      </section>
+
+      <footer class="panel-foot">
+        <p>등급 표기: 블루리본 서베이는 2025년 인천 선정작, '찐후기'는 광고·협찬 없이 방문자 후기로 검증된 곳입니다.</p>
+        <p id="tier-note-foot"></p>
+      </footer>
+    </aside>
+
+    <div class="map-wrap">
+      <div id="map" role="application" aria-label="인천 맛집 지도"></div>
+      <div class="legend">
+        <span><i class="dot michelin"></i>미쉐린</span>
+        <span><i class="dot blueribbon"></i>블루리본</span>
+        <span><i class="dot local"></i>찐후기</span>
+      </div>
+      <button class="map-ctrl" id="fit-route" type="button" title="경로 전체 보기">경로 보기</button>
+    </div>
+  </main>
+</div>
+
+<div class="sheet" id="detail" hidden>
+  <div class="sheet-backdrop" data-close="1"></div>
+  <article class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button class="sheet-close" id="detail-close" type="button" aria-label="닫기">✕</button>
+    <div id="detail-content"></div>
+  </article>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
