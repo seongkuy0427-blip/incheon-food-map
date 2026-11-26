@@ -2763,7 +2763,7 @@
         district: prefill.district, category: prefill.category, phone: prefill.phone,
         placeRef: prefill.id, matched: prefill
       });
-      setTimeout(function () { el.addNote.focus(); }, 60);
+      setTimeout(function () { (el.addNick.value ? el.addNote : el.addNick).focus(); }, 60);
     } else {
       setTimeout(function () { (el.addNick.value ? el.addSearch : el.addNick).focus(); }, 60);
     }
