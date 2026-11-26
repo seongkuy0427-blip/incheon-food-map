@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css?v=6" />
+<link rel="stylesheet" href="assets/style.css?v=7" />
 </head>
 <body>
 <div id="app">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="topbar-right">
-      <button class="key-btn" id="key-open" type="button" title="카카오 상호명 검색 키 (내 기기에만 저장)">
+      <button class="key-btn" id="key-open" type="button" title="카카오 키 (상호명 검색 REST 키 · 지도 JavaScript 키, 내 기기에만 저장)">
         <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M17 6l2.5 2.5M14.5 8.5L17 11"/></svg></span><span class="lbl">카카오 키</span>
       </button>
       <button class="add-btn" id="add-open" type="button">
@@ -198,13 +198,16 @@
           <span>경로 보기</span>
         </button>
       </div>
+      <div class="map-zoom" id="map-zoom" hidden>
+        <button type="button" data-zoom="in" aria-label="확대" title="확대">＋</button>
+        <button type="button" data-zoom="out" aria-label="축소" title="축소">－</button>
+      </div>
     </div>
   </main>
 </div>
 
 <div class="sheet" id="detail" hidden>
-  <div class="sheet-backdrop" data-close="1"></div>
-  <article class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+  <article class="sheet-body" role="dialog" aria-labelledby="detail-title">
     <div class="sheet-grip" id="detail-grip" aria-hidden="true"><span></span></div>
     <button class="sheet-close" id="detail-close" type="button" aria-label="닫기">✕</button>
     <div id="detail-content"></div>
@@ -220,22 +223,40 @@
 
     <div class="key-box">
       <button type="button" class="key-toggle" id="kakao-key-toggle" aria-expanded="false" aria-controls="kakao-key-panel">
-        <span>카카오 상호명 검색 키 <em>(내 기기에만 저장)</em></span>
+        <span>카카오 키 <em>(내 기기에만 저장)</em></span>
         <span class="key-state" id="kakao-key-state">미등록</span>
         <span class="caret" aria-hidden="true">▾</span>
       </button>
       <div class="key-panel" id="kakao-key-panel" hidden>
-        <div class="key-row">
-          <input id="kakao-key-input" type="password" placeholder="REST API 키 붙여넣기" autocomplete="off" spellcheck="false" />
-          <button class="mini" id="kakao-key-save" type="button">저장</button>
-          <button class="mini" id="kakao-key-clear" type="button" hidden>삭제</button>
+        <div class="key-field">
+          <div class="key-field-head">
+            <span>REST API 키 <em>상호명·주소 검색</em></span>
+          </div>
+          <div class="key-row">
+            <input id="kakao-key-input" type="password" placeholder="REST API 키 붙여넣기" autocomplete="off" spellcheck="false" />
+            <button class="mini" id="kakao-key-save" type="button">저장</button>
+            <button class="mini" id="kakao-key-clear" type="button" hidden>삭제</button>
+          </div>
         </div>
+        <div class="key-field">
+          <div class="key-field-head">
+            <span>JavaScript 키 <em>진짜 카카오맵 지도</em></span>
+            <span class="key-state" id="kakao-js-key-state">미등록</span>
+          </div>
+          <div class="key-row">
+            <input id="kakao-js-key-input" type="password" placeholder="JavaScript 키 붙여넣기" autocomplete="off" spellcheck="false" />
+            <button class="mini" id="kakao-js-key-save" type="button">저장</button>
+            <button class="mini" id="kakao-js-key-clear" type="button" hidden>삭제</button>
+          </div>
+        </div>
+        <p class="key-engine">지금 지도 <b id="map-engine-label">기본 지도(OSM)</b></p>
+        <p class="key-note engine-note" id="map-engine-note" hidden></p>
         <ol class="key-steps">
-          <li><a href="https://developers.kakao.com" target="_blank" rel="noopener">developers.kakao.com</a> 로그인 → <b>내 애플리케이션</b> 추가(이름은 아무거나)</li>
-          <li>만든 앱의 <b>앱 키</b>에서 <b>REST API 키</b> 복사</li>
-          <li>위 칸에 붙여넣고 <b>저장</b> — 휴대폰·PC에서 각각 한 번씩</li>
+          <li><a href="https://developers.kakao.com" target="_blank" rel="noopener">developers.kakao.com</a> 로그인 → <b>내 애플리케이션</b> → 앱 선택</li>
+          <li><b>앱 → 플랫폼 키</b>에서 <b>REST API 키</b>를 위 칸에, <b>JavaScript 키</b>를 아래 칸에 붙여넣고 저장</li>
+          <li><b>플랫폼 → Web 사이트 도메인</b>에 <b>https://seongkuy0427-blip.github.io</b> 등록 (지도가 안 뜰 때 확인)</li>
         </ol>
-        <p class="key-note">키는 이 브라우저(localStorage)에만 저장되고 GitHub에는 올라가지 않습니다. 카카오 로컬 API는 하루 30만 건까지 무료입니다.</p>
+        <p class="key-note">키는 이 브라우저(localStorage)에만 저장되고 GitHub에는 올라가지 않습니다. JavaScript 키를 넣으면 진짜 카카오맵으로, 없거나 막히면 기본 지도(OSM)로 자동 전환됩니다.</p>
       </div>
     </div>
 
@@ -309,6 +330,6 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/app.js?v=6"></script>
+<script src="assets/app.js?v=7"></script>
 </body>
 </html>

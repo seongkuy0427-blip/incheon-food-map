@@ -431,10 +431,48 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
 }
 .leaflet-tooltip.end-tip::before{display:none}
 
-/* ── 상세 패널 ───────────────────────────────────── */
-.sheet{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:flex-end;padding:calc(var(--header-h) + 10px) 16px 16px}
+/* ── 지도 오버레이(핀·라벨) — Leaflet·카카오 공통 ──────── */
+.ov-wrap{background:none;border:0;overflow:visible}
+.ov{position:absolute;left:0;top:0;width:0;height:0;overflow:visible;cursor:pointer}
+.ov-rest{cursor:pointer}
+.ov-label{
+  position:absolute;left:12px;top:-16px;white-space:nowrap;
+  background:rgba(255,255,255,.84);border:1px solid var(--hair);border-radius:8px;
+  box-shadow:0 4px 14px rgba(15,23,42,.12);color:var(--ink);font-size:11px;font-weight:640;letter-spacing:-.01em;
+  padding:3px 7px;
+  -webkit-backdrop-filter:blur(6px) saturate(150%);backdrop-filter:blur(6px) saturate(150%);
+  pointer-events:none;
+}
+.ov-label.sel{left:16px;top:-17px;background:var(--accent);border-color:transparent;color:#fff;font-weight:680;box-shadow:0 6px 18px rgba(79,70,229,.32)}
+.ov-tag{
+  position:absolute;left:0;transform:translate(-50%,-100%);white-space:nowrap;
+  background:rgba(15,23,42,.92);color:#fff;border-radius:7px;font-size:10.5px;font-weight:620;
+  padding:3px 7px;box-shadow:0 4px 12px rgba(15,23,42,.2);pointer-events:none;
+}
+.ov-tag.end{background:var(--coral)}
+.ov-tag.near{background:rgba(49,46,129,.92);border:0;border-radius:8px;font-size:11px;font-weight:600;box-shadow:0 6px 18px rgba(15,23,42,.18)}
+
+/* 카카오맵일 때만 보이는 줌 버튼 (Leaflet은 자체 컨트롤 사용) */
+.map-zoom{position:absolute;right:16px;bottom:18px;z-index:600;display:flex;flex-direction:column;gap:6px}
+.map-zoom button{
+  width:32px;height:32px;display:grid;place-items:center;padding:0;
+  background:rgba(255,255,255,.94);color:var(--ink-2);font-size:15px;font-weight:700;line-height:1;
+  border:1px solid var(--hair);border-radius:10px;
+  box-shadow:0 1px 2px rgba(15,23,42,.10),0 6px 16px rgba(15,23,42,.08);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+.map-zoom button:hover{background:#fff;color:var(--ink)}
+
+/* 상세 드로어가 열리면 지도 위 컨트롤을 드로어 밖으로 밀어 둔다 */
+@media (min-width:901px){
+  body.detail-open .map-ctrl-group{right:calc(min(432px,100%) + 30px)}
+  body.detail-open .map-zoom{right:calc(min(432px,100%) + 30px)}
+}
+
+/* ── 상세 패널 (비차단 드로어) ─────────────────────── */
+/* 패널이 떠 있어도 지도·목록·필터를 그대로 쓸 수 있게 배경 레이어는 클릭을 받지 않는다 */
+.sheet{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:flex-end;padding:calc(var(--header-h) + 10px) 16px 16px;pointer-events:none}
 .sheet[hidden]{display:none}
-.sheet-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.18);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);display:none}
 .sheet-body{
   position:relative;z-index:1;background:#fff;width:min(432px,100%);height:auto;max-height:100%;overflow-y:auto;
   border:1px solid var(--hair);border-radius:var(--r-xl);padding:22px 22px 0;
@@ -442,6 +480,7 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
   animation:sheetIn .26s var(--ease);
   scrollbar-width:thin;scrollbar-color:rgba(15,23,42,.16) transparent;
   overscroll-behavior:contain;
+  pointer-events:auto;
 }
 .sheet-body::-webkit-scrollbar{width:9px}
 .sheet-body::-webkit-scrollbar-thumb{background-clip:padding-box;border:3px solid transparent;border-radius:99px;background-color:rgba(15,23,42,.14)}
@@ -590,6 +629,16 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
 .key-steps a{color:var(--accent-ink);font-weight:640;text-decoration:none}
 .key-steps b{color:var(--ink);font-weight:680}
 .key-note{margin:0;font-size:11px;color:var(--ink-3);line-height:1.6}
+
+/* 키 패널: REST / JavaScript 두 칸 */
+.key-field{margin-top:10px}
+.key-field-head{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:660;color:var(--ink-2)}
+.key-field-head em{font-style:normal;font-weight:500;color:var(--ink-3);font-size:10.5px}
+.key-field-head .key-state{margin-left:auto}
+.key-field .key-row{margin:6px 0 0}
+.key-engine{margin:12px 0 0;font-size:11.5px;color:var(--ink-2);line-height:1.6}
+.key-engine b{color:var(--accent-ink);font-weight:680}
+.key-note.engine-note{margin:5px 0 0;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;padding:7px 9px}
 .search-hint{margin:7px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.55}
 .search-hint b{color:var(--ink-2);font-weight:650}
 
@@ -663,17 +712,18 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
   .legend .dot{width:7px;height:7px}
   .map-ctrl-group{right:10px;top:64px}
   .map-ctrl{height:32px;padding:0 10px;font-size:11.5px}
+  .map-zoom{right:10px;bottom:calc(var(--panel-h) + 14px);transition:bottom .28s var(--ease),opacity .2s var(--ease)}
+  body.sheet-full .map-zoom{opacity:0;pointer-events:none}
   .leaflet-control-zoom{display:none}
   .leaflet-bottom.leaflet-right{bottom:calc(var(--panel-h) + 4px) !important;transition:bottom .28s var(--ease),opacity .2s var(--ease)}
   .leaflet-control-attribution{font-size:8.5px !important;max-width:52vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   body.sheet-full .legend{opacity:0;pointer-events:none}
   body.sheet-full .leaflet-bottom.leaflet-right{opacity:0;pointer-events:none}
 
-  /* 상세: 바텀시트 */
-  .sheet{align-items:flex-end;justify-content:center;padding:0}
-  .sheet-backdrop{display:block}
+  /* 상세: 바텀시트 (열려 있어도 위쪽 지도는 그대로 조작 가능) */
+  .sheet{align-items:flex-end;justify-content:center;padding:0;pointer-events:none}
   .sheet-body{
-    width:100%;height:auto;max-height:88dvh;border-radius:22px 22px 0 0;border:1px solid var(--hair);border-bottom:0;
+    width:100%;height:auto;max-height:74dvh;border-radius:22px 22px 0 0;border:1px solid var(--hair);border-bottom:0;
     padding:8px 18px 0;animation:sheetUp .28s var(--ease);
   }
   @keyframes sheetUp{from{transform:translateY(26px);opacity:.7}to{transform:none;opacity:1}}
