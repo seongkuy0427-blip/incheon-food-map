@@ -360,7 +360,6 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
 .map-ctrl:hover{background:#fff;color:var(--ink);transform:translateY(-1px)}
 
 /* ── 마커 ────────────────────────────────────────── */
-.pin-wrap{background:none;border:0}
 .pin{position:relative;display:block;width:100%;height:100%}
 .pin i{
   position:absolute;left:50%;top:50%;width:62%;height:62%;
@@ -388,7 +387,6 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
 }
 
 /* 거점(대중교통) */
-.hub-marker{display:flex;align-items:center;gap:5px;pointer-events:none;background:none;border:0}
 .hub-pin{width:7px;height:7px;border-radius:50%;background:#334155;border:1.5px solid #fff;box-shadow:0 1px 3px rgba(15,23,42,.28);flex:0 0 auto}
 .hub-label{
   font-size:9.5px;font-weight:640;color:#334155;background:rgba(255,255,255,.78);
@@ -413,23 +411,6 @@ button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:defa
   font-size:9.5px;font-weight:700;color:#fff;background:#334155;border-radius:5px;padding:1px 5px;white-space:nowrap;
 }
 .endpoint.end .ep-label{background:var(--coral)}
-
-/* 라벨(툴팁) */
-.leaflet-tooltip.rest-tip{
-  background:rgba(255,255,255,.80);
-  border:1px solid var(--hair);border-radius:8px;
-  box-shadow:0 4px 14px rgba(15,23,42,.12);
-  color:var(--ink);font-size:11px;font-weight:640;letter-spacing:-.01em;
-  padding:3px 7px;white-space:nowrap;
-  -webkit-backdrop-filter:blur(6px) saturate(150%);backdrop-filter:blur(6px) saturate(150%);
-}
-.leaflet-tooltip.rest-tip::before{display:none}
-.leaflet-tooltip.rest-tip.sel{background:var(--accent);border-color:transparent;color:#fff;font-size:11px;font-weight:680;box-shadow:0 6px 18px rgba(79,70,229,.32)}
-.leaflet-tooltip.end-tip{
-  background:rgba(15,23,42,.92);color:#fff;border:0;border-radius:7px;font-size:10.5px;font-weight:620;
-  padding:3px 7px;box-shadow:0 4px 12px rgba(15,23,42,.2);
-}
-.leaflet-tooltip.end-tip::before{display:none}
 
 /* ── 지도 오버레이(핀·라벨) — Leaflet·카카오 공통 ──────── */
 .ov-wrap{background:none;border:0;overflow:visible}

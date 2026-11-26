@@ -425,8 +425,7 @@
       raw: map,
       on: function (name, fn) { (handlers[name] = handlers[name] || []).push(fn); },
       size: function () {
-        var s = map.getSize();
-        return { x: s.width, y: s.height };
+        return { x: holder.clientWidth, y: holder.clientHeight };
       },
       center: function () {
         var c = map.getCenter();
