@@ -24,6 +24,7 @@
   var ALL_CATS = MEAL_CATS.concat(['카페·디저트']);
   var LS_CUSTOM = 'incheonFoodMap.custom.v1';
   var LS_HIDDEN = 'incheonFoodMap.hidden.v1';
+  var LS_KAKAO = 'kakaoRestKey';
 
   var HUBS = [
     { name: '부평역', lat: 37.4894, lng: 126.7235 },
@@ -124,6 +125,106 @@
 
   function mapSearchUrl(base, name) {
     return base + encodeURIComponent(name);
+  }
+
+  /* ── 카카오 로컬(상호명) 검색 ─────────────────────
+     키는 localStorage(kakaoRestKey)에만 저장한다. 코드에는 어떤 키도 넣지 않는다. */
+  function kakaoKey() {
+    var v = storeGet(LS_KAKAO, '');
+    return typeof v === 'string' ? v.trim() : '';
+  }
+
+  function setKakaoKey(key) {
+    if (key) storeSet(LS_KAKAO, key);
+    else { try { localStorage.removeItem(LS_KAKAO); } catch (e) { /* 저장 불가 */ } }
+    renderKeyState();
+  }
+
+  var KAKAO_CATS = [
+    ['카페', '카페·디저트'], ['디저트', '카페·디저트'], ['베이커리', '카페·디저트'], ['제과', '카페·디저트'], ['브런치', '카페·디저트'],
+    ['중식', '중식'], ['중국', '중식'],
+    ['일식', '일식'], ['초밥', '일식'], ['스시', '일식'], ['라멘', '일식'], ['돈카츠', '일식'], ['우동', '일식'], ['이자카야', '일식'],
+    ['해산물', '해산물'], ['횟집', '해산물'], ['조개', '해산물'], ['생선', '해산물'], ['복어', '해산물'],
+    ['고기', '고기'], ['삼겹', '고기'], ['갈비', '고기'], ['곱창', '고기'], ['숯불', '고기'], ['구이', '고기'], ['족발', '고기'],
+    ['양식', '양식'], ['이탈리안', '양식'], ['피자', '양식'], ['파스타', '양식'], ['스테이크', '양식'], ['햄버거', '양식'],
+    ['국수', '면·분식'], ['칼국수', '면·분식'], ['냉면', '면·분식'], ['수제비', '면·분식'], ['분식', '면·분식'],
+    ['김밥', '면·분식'], ['떡볶이', '면·분식'], ['만두', '면·분식'], ['돈까스', '면·분식']
+  ];
+
+  function categoryFromKakao(it) {
+    var group = it.category_group_name || '';
+    var text = (it.category_name || '') + ' ' + group;
+    if (group.indexOf('카페') >= 0) return '카페·디저트';
+    for (var i = 0; i < KAKAO_CATS.length; i++) {
+      if (text.indexOf(KAKAO_CATS[i][0]) >= 0) return KAKAO_CATS[i][1];
+    }
+    return '한식';
+  }
+
+  function districtFromText(text) {
+    if (!text) return '';
+    for (var i = 0; i < DISTRICTS.length; i++) {
+      if (text.indexOf(DISTRICTS[i]) >= 0) return DISTRICTS[i];
+    }
+    if (text.indexOf('중구') >= 0 || text.indexOf('동구') >= 0) return '제물포구';
+    if (text.indexOf('서구') >= 0) return '서해구';
+    if (text.indexOf('남구') >= 0) return '미추홀구';
+    return '';
+  }
+
+  function kakaoDocToItem(d) {
+    var address = d.road_address_name || d.address_name || '';
+    return {
+      name: d.place_name || '',
+      lat: parseFloat(d.y),
+      lng: parseFloat(d.x),
+      address: address,
+      roadAddress: d.road_address_name || '',
+      jibunAddress: d.address_name || '',
+      category: categoryFromKakao(d),
+      categoryName: d.category_name || '',
+      phone: d.phone || '',
+      district: districtFromText(address),
+      distance: d.distance ? parseInt(d.distance, 10) : null,
+      placeUrl: d.place_url || '',
+      source: 'kakao'
+    };
+  }
+
+  /* 키가 없으면 호출하지 않고 reason 'no-key'로 즉시 돌려준다 */
+  function kakaoSearch(q) {
+    var key = kakaoKey();
+    if (!key) return Promise.resolve({ ok: false, reason: 'no-key', items: [] });
+    var cfg = REGIONS[state.region];
+    var url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query=' + encodeURIComponent(q) +
+      '&x=' + cfg.center[1] + '&y=' + cfg.center[0] + '&size=8';
+    return fetch(url, { headers: { 'Authorization': 'KakaoAK ' + key } })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) return { ok: false, reason: 'auth', items: [] };
+        if (!r.ok) return { ok: false, reason: 'http-' + r.status, items: [] };
+        return r.json().then(function (j) {
+          return { ok: true, reason: '', items: (j.documents || []).map(kakaoDocToItem) };
+        });
+      })
+      .catch(function () { return { ok: false, reason: 'network', items: [] }; });
+  }
+
+  function kakaoEndpoint(it) {
+    var cat = (it.categoryName || '').split(' > ').pop();
+    return {
+      name: it.name,
+      lat: it.lat,
+      lng: it.lng,
+      meta: [cat, it.address].filter(Boolean).join(' · '),
+      address: it.address
+    };
+  }
+
+  function kakaoErrorNote(res) {
+    if (res.reason === 'auth') return '카카오 REST API 키 또는 카카오맵/로컬 활성화 여부를 확인해 주세요.';
+    if (res.reason === 'network') return '카카오 서버에 연결하지 못했습니다.';
+    if (res.reason === 'no-key') return '';
+    return '카카오 검색이 응답하지 않았습니다.';
   }
 
   /* ── 경로 투영: 수직 최단거리 + 진행거리 ───────── */
@@ -405,15 +506,26 @@
     var input = kind === 'start' ? el.startInput : el.endInput;
     var box = kind === 'start' ? el.startResults : el.endResults;
     var timer = null;
+    var NO_KEY_NOTE = '상호명 검색을 쓰려면 🔑 카카오 키를 한 번만 입력해 주세요. (⭐ 내 맛집 추가 → 🔑 카카오 상호명 검색 키)';
 
-    function show(items) {
-      if (!items.length) { box.hidden = true; box.innerHTML = ''; return; }
-      box.innerHTML = items.map(function (it, i) {
+    function show(items, note) {
+      if (!items.length && !note) { box.hidden = true; box.innerHTML = ''; return; }
+      var html = items.map(function (it, i) {
         return '<button type="button" data-i="' + i + '"><span class="r-name">' + esc(it.name) +
           '</span><span class="r-meta">' + esc(it.meta || '') + '</span></button>';
       }).join('');
+      if (note) html += '<div class="r-hint">' + note + '</div>';
+      box.innerHTML = html;
       box.hidden = false;
       box._items = items;
+    }
+
+    function merge(base, extra) {
+      extra.forEach(function (r) {
+        if (!isFinite(r.lat) || !isFinite(r.lng)) return;
+        if (!base.some(function (m) { return haversine([m.lat, m.lng], [r.lat, r.lng]) < 80; })) base.push(r);
+      });
+      return base;
     }
 
     input.addEventListener('input', function () {
@@ -422,13 +534,31 @@
       if (q.length < 1) { box.hidden = true; return; }
       show(localMatches(q));
       timer = setTimeout(function () {
-        nominatim(q).then(function (remote) {
-          if (input.value.trim() !== q) return;
-          var merged = localMatches(q);
-          remote.forEach(function (r) {
-            if (!merged.some(function (m) { return haversine([m.lat, m.lng], [r.lat, r.lng]) < 80; })) merged.push(r);
+        var base = localMatches(q);
+        if (!kakaoKey()) {
+          nominatim(q).then(function (remote) {
+            if (input.value.trim() !== q) return;
+            var merged = merge(base, remote);
+            show(merged.slice(0, 7), merged.length ? '' : NO_KEY_NOTE);
           });
-          show(merged.slice(0, 7));
+          return;
+        }
+        kakaoSearch(q).then(function (res) {
+          if (input.value.trim() !== q) return;
+          var items = merge(base, res.items.map(kakaoEndpoint));
+          if (res.ok) {
+            if (!items.length) {
+              show([], '카카오에서 찾은 곳이 없습니다. 다른 이름으로 검색하거나 지도에서 직접 찍어 주세요.');
+              return;
+            }
+            show(items.slice(0, 8));
+            return;
+          }
+          var note = kakaoErrorNote(res);
+          nominatim(q).then(function (remote) {
+            if (input.value.trim() !== q) return;
+            show(merge(items, remote).slice(0, 8), note);
+          });
         });
       }, 420);
     });
@@ -892,6 +1022,7 @@
     el.addMenu.value = '';
     el.addMemo.value = '';
     el.addAddress.value = '';
+    if (el.addPhone) el.addPhone.value = '';
     el.addSearch.value = '';
     el.addDistrict.value = '';
     el.addResults.hidden = true;
@@ -900,12 +1031,57 @@
     el.addModal.hidden = false;
     document.body.style.overflow = 'hidden';
     updateCustomCount();
+    renderKeyState();
+    setKeyPanel(false);
     setTimeout(function () { el.addSearch.focus(); }, 60);
   }
 
   function closeAddModal() {
     el.addModal.hidden = true;
     if (el.detail.hidden) document.body.style.overflow = '';
+  }
+
+  function renderKeyState() {
+    var key = kakaoKey();
+    if (el.kakaoKeyState) {
+      el.kakaoKeyState.textContent = key ? '저장됨 · 끝 ' + key.slice(-4) : '미등록';
+      el.kakaoKeyState.classList.toggle('on', !!key);
+    }
+    if (el.kakaoKeyClear) el.kakaoKeyClear.hidden = !key;
+    if (el.kakaoKeyInput) el.kakaoKeyInput.value = '';
+    if (el.addSearchHint) {
+      el.addSearchHint.innerHTML = key
+        ? '🔑 카카오 상호명 검색 사용 중 — 가게 이름(예: 윤가네바지락칼국수)만 넣고 검색하세요.'
+        : '🔑 위 <b>카카오 키</b>를 한 번 넣으면 상호명으로 바로 찾습니다. 지금은 도로명주소 검색만 됩니다.';
+    }
+    if (el.keyOpen) el.keyOpen.classList.toggle('on', !!key);
+  }
+
+  function setKeyPanel(open) {
+    if (!el.kakaoKeyPanel) return;
+    el.kakaoKeyPanel.hidden = !open;
+    el.kakaoKeyToggle.classList.toggle('open', open);
+    el.kakaoKeyToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) setTimeout(function () { el.kakaoKeyInput.focus(); }, 80);
+  }
+
+  function openKeyPanel() {
+    openAddModal();
+    setKeyPanel(true);
+  }
+
+  function saveKeyFromInput() {
+    var v = (el.kakaoKeyInput.value || '').trim();
+    if (!v) { toast('카카오 REST API 키를 붙여넣어 주세요.'); el.kakaoKeyInput.focus(); return; }
+    if (v.length < 20) { toast('키가 너무 짧습니다. REST API 키(32자 내외)를 확인해 주세요.'); el.kakaoKeyInput.focus(); return; }
+    setKakaoKey(v);
+    toast('🔑 카카오 키를 이 기기에 저장했습니다. 이제 상호명으로 검색됩니다.', 3200);
+    if (el.addSearch.value.trim()) runAddSearch();
+  }
+
+  function clearKey() {
+    setKakaoKey('');
+    toast('카카오 키를 이 기기에서 삭제했습니다.');
   }
 
   function fillAddLocation(lat, lng, address) {
@@ -942,21 +1118,61 @@
       .catch(function () { return { address: '', district: '' }; });
   }
 
+  function renderAddResults(items, warn) {
+    var html = '';
+    if (warn) html += '<div class="r-warn">' + esc(warn) + '</div>';
+    if (!items.length) {
+      html += '<div class="r-empty">검색 결과가 없습니다. 지도에서 직접 위치를 찍어 주세요.</div>';
+    } else {
+      html += items.map(function (it, i) {
+        var tag = it.source === 'kakao' ? '<span class="r-src">카카오</span>' : '';
+        return '<button type="button" data-i="' + i + '"><span class="r-name">' + esc(it.name) + tag +
+          '</span><span class="r-meta">' + esc(it.meta || it.address || '') + '</span></button>';
+      }).join('');
+    }
+    el.addResults.innerHTML = html;
+    el.addResults._items = items;
+    el.addResults.hidden = false;
+  }
+
+  function nominatimToAddItem(it) {
+    return {
+      name: (it.name || '').split(',')[0].split('(')[0].trim(),
+      lat: it.lat,
+      lng: it.lng,
+      address: it.address || it.name,
+      district: it.district || districtFromText(it.address || it.name || ''),
+      source: 'osm'
+    };
+  }
+
   function runAddSearch() {
     var q = el.addSearch.value.trim();
     if (!q) return;
     el.addResults.hidden = false;
-    el.addResults.innerHTML = '<div class="r-empty">검색 중…</div>';
-    nominatim(q).then(function (items) {
-      if (!items.length) {
-        el.addResults.innerHTML = '<div class="r-empty">검색 결과가 없습니다. 지도에서 직접 위치를 찍어 주세요.</div>';
+    if (!kakaoKey()) {
+      el.addResults.innerHTML = '<div class="r-empty">주소로 검색 중…</div>';
+      nominatim(q).then(function (items) {
+        renderAddResults(items.map(nominatimToAddItem),
+          items.length ? '' : '🔑 카카오 키를 넣으면 상호명으로 바로 찾습니다.');
+      });
+      return;
+    }
+    el.addResults.innerHTML = '<div class="r-empty">카카오에서 상호명으로 찾는 중…</div>';
+    kakaoSearch(q).then(function (res) {
+      if (res.ok && res.items.length) {
+        renderAddResults(res.items.map(function (it) {
+          it.meta = [(it.categoryName || '').split(' > ').pop(), it.address, it.phone].filter(Boolean).join(' · ');
+          return it;
+        }), '');
         return;
       }
-      el.addResults.innerHTML = items.map(function (it, i) {
-        return '<button type="button" data-i="' + i + '"><span class="r-name">' + esc(it.name) +
-          '</span><span class="r-meta">' + esc(it.address || it.meta || '') + '</span></button>';
-      }).join('');
-      el.addResults._items = items;
+      var warn = res.ok
+        ? '카카오에서 찾지 못해 주소로 검색했습니다 (카카오 로컬은 상호명·지명 위주입니다).'
+        : kakaoErrorNote(res) + ' 주소로 검색했습니다.';
+      nominatim(q).then(function (items) {
+        renderAddResults(items.map(nominatimToAddItem), warn);
+      });
     });
   }
 
@@ -968,8 +1184,12 @@
     el.addCoord.textContent = '📍 ' + it.lat.toFixed(5) + ', ' + it.lng.toFixed(5);
     el.addCoord.classList.add('ok');
     el.addAddress.value = addState.address;
-    if (!el.addName.value) {
-      el.addName.value = (it.name || '').split(',')[0].split('(')[0].trim();
+    if (it.source === 'kakao') {
+      el.addName.value = it.name;
+      if (it.category) el.addCat.value = it.category;
+      if (it.phone && el.addPhone) el.addPhone.value = it.phone;
+    } else if (!el.addName.value) {
+      el.addName.value = it.name;
     }
     if (it.district) el.addDistrict.value = it.district;
     el.addResults.hidden = true;
@@ -984,6 +1204,7 @@
     var cat = el.addCat.value || '한식';
     var menuText = el.addMenu.value.trim();
     var memo = el.addMemo.value.trim();
+    var phone = el.addPhone ? el.addPhone.value.trim() : '';
     var rec = {
       id: 'custom-' + Date.now().toString(36) + Math.floor(Math.random() * 1000),
       name: name,
@@ -1004,7 +1225,7 @@
       }) : [],
       reviewSummary: memo ? '내 메모: ' + memo : '내가 직접 추가한 맛집입니다.',
       tips: '',
-      phone: '',
+      phone: phone,
       hours: '매장 확인',
       closed: '매장 확인',
       naverMapUrl: mapSearchUrl('https://map.naver.com/p/search/', name),
@@ -1166,6 +1387,17 @@
     el.addOpen.addEventListener('click', openAddModal);
     var addOpen2 = $('add-open-2');
     if (addOpen2) addOpen2.addEventListener('click', openAddModal);
+    if (el.keyOpen) el.keyOpen.addEventListener('click', openKeyPanel);
+    if (el.kakaoKeyToggle) {
+      el.kakaoKeyToggle.addEventListener('click', function () {
+        setKeyPanel(el.kakaoKeyPanel.hidden);
+      });
+      el.kakaoKeySave.addEventListener('click', saveKeyFromInput);
+      el.kakaoKeyClear.addEventListener('click', clearKey);
+      el.kakaoKeyInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); saveKeyFromInput(); }
+      });
+    }
     el.addClose.addEventListener('click', closeAddModal);
     el.addCancel.addEventListener('click', closeAddModal);
     el.addSave.addEventListener('click', saveCustomRestaurant);
@@ -1365,6 +1597,10 @@
       hiddenLine: $('hidden-line'), hiddenNote: $('hidden-note'), hiddenRestore: $('hidden-restore'),
       addOpen: $('add-open'), addModal: $('add-modal'), addClose: $('add-close'), addCancel: $('add-cancel'),
       addSearch: $('add-search'), addSearchBtn: $('add-search-btn'), addResults: $('add-results'),
+      addSearchHint: $('add-search-hint'), addPhone: $('add-phone'),
+      keyOpen: $('key-open'), kakaoKeyToggle: $('kakao-key-toggle'), kakaoKeyPanel: $('kakao-key-panel'),
+      kakaoKeyInput: $('kakao-key-input'), kakaoKeyState: $('kakao-key-state'),
+      kakaoKeySave: $('kakao-key-save'), kakaoKeyClear: $('kakao-key-clear'),
       addPick: $('add-pick'), addCoord: $('add-coord'), addName: $('add-name'), addDistrict: $('add-district'),
       addCat: $('add-cat'), addMenu: $('add-menu'), addMemo: $('add-memo'), addAddress: $('add-address'),
       addSave: $('add-save'), exportBtn: $('export-btn'), importBtn: $('import-btn'), importFile: $('import-file'),
@@ -1374,6 +1610,7 @@
     initMap();
     renderHubs();
     bindEvents();
+    renderKeyState();
     bindSearch('start');
     bindSearch('end');
     setMode('route', true);

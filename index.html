@@ -7,7 +7,7 @@
 <meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을, 지역구로 고르면 동네 맛집을 모아 보여 주는 지도." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css?v=3" />
+<link rel="stylesheet" href="assets/style.css?v=4" />
 </head>
 <body>
 <div id="app">
@@ -16,10 +16,11 @@
       <span class="brand-mark" aria-hidden="true">🗺️</span>
       <div class="brand-text">
         <h1>인천 동선 맛집 지도</h1>
-        <p class="sub">동선 위에서, 동네에서 고르는 인천 맛집 · 블루리본·백년가게·방송 맛집 <b id="brand-count">148</b>곳</p>
+        <p class="sub">동선 위에서, 동네에서 고르는 인천 맛집 · 블루리본·백년가게·방송 맛집 <b id="brand-count">149</b>곳</p>
       </div>
     </div>
     <div class="topbar-right">
+      <button class="key-btn" id="key-open" type="button" title="카카오 상호명 검색 키 (내 기기에만 저장)">🔑 <span>카카오 키</span></button>
       <button class="add-btn" id="add-open" type="button">⭐ <span>내 맛집 추가</span></button>
     </div>
   </header>
@@ -167,12 +168,34 @@
     <h2 id="add-title">⭐ 내 맛집 추가</h2>
     <p class="modal-sub">가게 이름이나 주소로 찾거나, 지도에서 위치를 직접 찍어 저장하세요. 이 기기에 저장되고 백업으로 옮길 수 있습니다.</p>
 
+    <div class="key-box">
+      <button type="button" class="key-toggle" id="kakao-key-toggle" aria-expanded="false" aria-controls="kakao-key-panel">
+        <span>🔑 카카오 상호명 검색 키 <em>(내 기기에만 저장)</em></span>
+        <span class="key-state" id="kakao-key-state">미등록</span>
+        <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="key-panel" id="kakao-key-panel" hidden>
+        <div class="key-row">
+          <input id="kakao-key-input" type="password" placeholder="REST API 키 붙여넣기" autocomplete="off" spellcheck="false" />
+          <button class="mini" id="kakao-key-save" type="button">저장</button>
+          <button class="mini" id="kakao-key-clear" type="button" hidden>삭제</button>
+        </div>
+        <ol class="key-steps">
+          <li><a href="https://developers.kakao.com" target="_blank" rel="noopener">developers.kakao.com</a> 로그인 → <b>내 애플리케이션</b> 추가(이름은 아무거나)</li>
+          <li>만든 앱의 <b>앱 키</b>에서 <b>REST API 키</b> 복사</li>
+          <li>위 칸에 붙여넣고 <b>저장</b> — 휴대폰·PC에서 각각 한 번씩</li>
+        </ol>
+        <p class="key-note">키는 이 브라우저(localStorage)에만 저장되고 GitHub에는 올라가지 않습니다. 카카오 로컬 API는 하루 30만 건까지 무료입니다.</p>
+      </div>
+    </div>
+
     <div class="field">
       <label for="add-search">가게·주소 검색</label>
       <div class="input-wrap">
-        <input id="add-search" type="text" placeholder="예: 부평 순대국, 인천 연수구 송도동 …" autocomplete="off" />
+        <input id="add-search" type="text" placeholder="예: 윤가네바지락칼국수, 부평 순대국, 인천 연수구 송도동 …" autocomplete="off" />
         <button class="mini" id="add-search-btn" type="button">검색</button>
       </div>
+      <p class="search-hint" id="add-search-hint"></p>
       <div class="results" id="add-results" hidden></div>
     </div>
 
@@ -212,6 +235,9 @@
       <label class="full">주소 (선택)
         <input id="add-address" type="text" placeholder="검색하면 자동으로 채워집니다" />
       </label>
+      <label class="full">전화 (선택)
+        <input id="add-phone" type="tel" placeholder="검색하면 자동으로 채워집니다" />
+      </label>
     </div>
 
     <div class="modal-actions">
@@ -232,6 +258,6 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/app.js?v=3"></script>
+<script src="assets/app.js?v=4"></script>
 </body>
 </html>

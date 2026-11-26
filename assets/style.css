@@ -359,3 +359,54 @@ input,select{font:inherit;color:inherit}
 .form-grid label .lbl{font-size:11px;font-weight:700;color:var(--ink-3)}
 .form-grid label .req{color:#d92d20}
 .quick-add{margin-top:8px}
+
+/* ── v3: 카카오 상호명 검색 키 ───────────────────── */
+.key-btn{
+  border:1px solid var(--line);background:#fbfbfc;border-radius:10px;padding:8px 11px;
+  font-size:12.5px;font-weight:650;color:var(--ink-2);white-space:nowrap;
+}
+.key-btn:hover{background:#f2f2f5}
+.key-btn.on{background:#fff7e8;border-color:#f1d9a6;color:#96610c}
+.key-box{border:1px solid var(--line);border-radius:12px;background:#fafafc;margin:0 0 12px;overflow:hidden}
+.key-toggle{
+  display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;
+  padding:10px 12px;text-align:left;font-size:12.5px;font-weight:650;color:var(--ink-2);
+}
+.key-toggle em{font-style:normal;font-weight:500;color:var(--ink-3);font-size:11.5px}
+.key-state{
+  margin-left:auto;font-size:11px;font-weight:700;color:var(--ink-3);background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap;
+}
+.key-state.on{color:#96610c;background:#fff7e8;border-color:#f1d9a6}
+.key-toggle .caret{color:var(--ink-3);transition:transform .15s}
+.key-toggle.open .caret{transform:rotate(180deg)}
+.key-panel{padding:0 12px 12px;border-top:1px solid var(--line-2)}
+.key-row{display:flex;gap:6px;margin:10px 0 8px}
+.key-row input{
+  flex:1 1 auto;min-width:0;border:1px solid var(--line);border-radius:9px;padding:9px 10px;
+  background:#fff;font-size:13px;
+}
+.key-row input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.key-steps{margin:0 0 8px;padding-left:18px;font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.key-steps a{color:var(--accent);font-weight:600}
+.key-note{margin:0;font-size:11px;color:var(--ink-3);line-height:1.55}
+.search-hint{margin:6px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.5}
+.search-hint b{color:var(--ink-2)}
+.results .r-warn{
+  padding:7px 10px;font-size:11px;color:#9a3412;background:#fff7ed;border-bottom:1px solid var(--line-2);line-height:1.5;
+}
+.results .r-src{
+  font-size:9.5px;font-weight:700;color:#b45309;background:#fdf1e0;border-radius:5px;
+  padding:1px 4px;margin-left:6px;vertical-align:1px;
+}
+.results .r-hint{padding:7px 10px;font-size:11px;color:var(--ink-3);background:#fafafc;border-top:1px solid var(--line-2);line-height:1.5}
+
+@media (max-width:900px){
+  .key-btn span{display:none}
+  .key-btn{padding:8px 10px}
+}
+@media (max-width:520px){
+  .key-toggle em{display:none}
+  .key-toggle{font-size:12px;gap:6px}
+  .key-state{font-size:10.5px;padding:2px 7px}
+}
