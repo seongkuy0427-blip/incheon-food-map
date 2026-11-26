@@ -1727,6 +1727,10 @@
       if (!silent && state.route) fitRouteView();
     }
     updateFiltersSummary();
+    if (el.fitRoute) {
+      var lbl = el.fitRoute.querySelector('span');
+      if (lbl) lbl.textContent = mode === 'near' ? '반경 보기' : mode === 'district' ? '동네 보기' : '경로 보기';
+    }
   }
 
   /* ── 이벤트 ───────────────────────────────────── */
