@@ -560,6 +560,16 @@
     if (el.keyOpen) el.keyOpen.classList.toggle('on', !!(kakaoJsKey() || kakaoKey()));
   }
 
+  function kakaoTilesPresent() {
+    if (document.querySelectorAll('#map img').length > 0) return true;
+    var nodes = document.querySelectorAll('#map div');
+    for (var i = 0; i < nodes.length; i++) {
+      var bg = nodes[i].style && nodes[i].style.backgroundImage;
+      if (bg && (bg.indexOf('daumcdn') >= 0 || bg.indexOf('kakao') >= 0)) return true;
+    }
+    return false;
+  }
+
   /* 카카오맵이 타일을 실제로 그렸는지 확인. 도메인·키가 틀리면 타일이 오지 않아 빈 화면이 되므로
      그때는 자동으로 Leaflet으로 되돌린다. */
   function watchKakaoTiles() {
@@ -572,9 +582,9 @@
       setTimeout(function () {
         if (done) return;
         done = true;
-        if (document.querySelectorAll('#map img').length > 0) { resolve(true); return; }
+        if (kakaoTilesPresent()) { resolve(true); return; }
         reject(new Error('tiles'));
-      }, 5200);
+      }, 8000);
     });
   }
 
