@@ -106,6 +106,16 @@
     });
   }
 
+  /* 받침에 따라 '로/으로' 조사를 고른다 */
+  function josaRo(s) {
+    var t = String(s == null ? '' : s).trim();
+    var c = t.slice(-1);
+    if (!c) return '로';
+    var code = c.charCodeAt(0);
+    if (code < 0xAC00 || code > 0xD7A3) return '로';
+    return ((code - 0xAC00) % 28) ? '으로' : '로';
+  }
+
   function toast(msg, ms) {
     el.toast.textContent = msg;
     el.toast.hidden = false;
@@ -855,8 +865,9 @@
       interactive: false
     }).addTo(layerNear);
     var m = L.marker(c, { icon: nearIcon(), zIndexOffset: 1200, keyboard: false });
-    m.bindTooltip('기준 위치 · ' + esc(state.near.name) + ' (반경 ' + fmtDist(state.nearRadius) + ')', {
-      permanent: true, direction: 'top', offset: [0, -14], className: 'near-tip', opacity: 1
+    var label = state.near.name.length > 16 ? state.near.name.slice(0, 15) + '…' : state.near.name;
+    m.bindTooltip(isMobile() ? '기준 위치' : '기준 위치 · ' + esc(label), {
+      permanent: !isMobile(), direction: 'top', offset: [0, -14], className: 'near-tip', opacity: 1
     });
     m.addTo(layerNear);
   }
@@ -887,7 +898,7 @@
     renderMarkers();
     drawNear();
     if (!opts || opts.fit !== false) fitNear();
-    if (!opts || !opts.silent) toast('기준 위치를 ' + state.near.name + '으로 잡았습니다.');
+    if (!opts || !opts.silent) toast('기준 위치를 ' + state.near.name + josaRo(state.near.name) + ' 잡았습니다.');
   }
 
   function setNearRadius(r) {
