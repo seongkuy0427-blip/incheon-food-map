@@ -1164,6 +1164,8 @@
     });
 
     el.addOpen.addEventListener('click', openAddModal);
+    var addOpen2 = $('add-open-2');
+    if (addOpen2) addOpen2.addEventListener('click', openAddModal);
     el.addClose.addEventListener('click', closeAddModal);
     el.addCancel.addEventListener('click', closeAddModal);
     el.addSave.addEventListener('click', saveCustomRestaurant);
