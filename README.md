@@ -42,7 +42,7 @@ API 키 없이도 동작하고, `assets/config.js`에 넣어 둔 **카카오 Jav
 - **`🏆 친구 추천 현황`**: `전체 (N)` + 추천인별 등록 수(내림차순, 1~3위 메달). 누르면 그 친구 추천만 모아 지도·목록에 표시하고, 모바일에서는 시트가 한 단계 올라옵니다.
 - **배지**: 지도 핀 골드 링 + `성규 추천` 태그, 카드·상세에 금색 `○○ 추천` 배지, 카드에 첫 한 줄 평. 같은 집을 여러 명이 추천하면 `성규 외 1 추천` / 상세에 추천인별 한 줄 평 목록.
 - **삭제 권한**: 추천은 **내 이름으로 등록한 것**(또는 방금 등록한 것)만 삭제 버튼이 보입니다. `지도에서 숨기기`는 예전처럼 내 브라우저에만 적용됩니다.
-- **공용 DB**: Firestore `shared_places` 컬렉션을 실시간 구독. 연결 전에는 `recsCache.v1`의 마지막 사본을 보여 주고, 연결이 실패하면 로컬 저장으로 계속 씁니다. 등록 문서 필드는 `name·lat·lng·address·district·category·phone·note·recommender·placeRef·createdAt`입니다.
+- **공용 DB**: Firestore `shared_places` 컬렉션을 실시간 구독. 연결 전에는 `recsCache.v1`의 마지막 사본을 보여 주고, 연결이 실패하면 로컬 저장으로 계속 씁니다. 이때 올린 추천은 `pending.v1`에 보관했다가 **연결이 돌아오면 자동으로 업로드**합니다. 등록 문서 필드는 `name·lat·lng·address·district·category·phone·note·recommender·placeRef·createdAt`입니다.
 
 ## 디자인 (v8, 2026-11-26)
 

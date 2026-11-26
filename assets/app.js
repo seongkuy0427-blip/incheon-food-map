@@ -26,6 +26,7 @@
   var LS_RECS_CACHE = 'incheonFoodMap.recsCache.v1';  /* 공용 DB 마지막 사본 */
   var LS_LEGACY_CUSTOM = 'incheonFoodMap.custom.v1';  /* v8 이전 '내 맛집' */
   var LS_NICK = 'incheonFoodMap.nick.v1';             /* 내가 마지막으로 쓴 이름 */
+  var LS_PENDING = 'incheonFoodMap.pending.v1';       /* DB가 막혔을 때 올리지 못한 추천 */
   var LS_HIDDEN = 'incheonFoodMap.hidden.v1';
   var LS_NEAR = 'incheonFoodMap.near.v1';
   var LS_SUBWAY = 'incheonFoodMap.subway.v1';
@@ -263,6 +264,44 @@
     return normName(r.name) + '@' + (+r.lat).toFixed(4) + ',' + (+r.lng).toFixed(4) + '#' + String(r.recommender || '');
   }
 
+  function mergeRecLists(a, b) {
+    var seen = {};
+    var out = [];
+    (a || []).concat(b || []).forEach(function (r) {
+      var k = recKey(r);
+      if (seen[k]) return;
+      seen[k] = 1;
+      out.push(r);
+    });
+    return out;
+  }
+
+  function pendingRecs() {
+    var v = storeGet(LS_PENDING, []);
+    return Array.isArray(v) ? normalizeRecs(v) : [];
+  }
+
+  function savePending(list) { storeSet(LS_PENDING, normalizeRecs(list)); }
+
+  var flushing = false;
+  function flushPending() {
+    var list = pendingRecs();
+    if (!list.length || !state.db || flushing) return;
+    flushing = true;
+    Promise.all(list.map(function (rec) {
+      return state.db.collection(COL).add(recDoc(rec)).then(function () {
+        return { ok: true, rec: rec };
+      }).catch(function () { return { ok: false, rec: rec }; });
+    })).then(function (res) {
+      var left = res.filter(function (x) { return !x.ok; }).map(function (x) { return x.rec; });
+      savePending(left);
+      flushing = false;
+      if (left.length < list.length) {
+        toast('연결이 돌아와 밀려 있던 추천 ' + (list.length - left.length) + '건을 올렸습니다.', 3600);
+      }
+    });
+  }
+
   function normalizeRecs(list) {
     if (!Array.isArray(list)) return [];
     var out = [];
@@ -349,6 +388,11 @@
     rec.id = newRecId();
     state.recs.push(rec);
     saveLocalRecs();
+    /* 공용 DB를 쓰기로 했는데 지금 막혀 있으면, 연결이 돌아왔을 때 올리도록 대기열에 둔다 */
+    if (firebaseConfig()) {
+      savePending(pendingRecs().concat([rec]));
+      return Promise.resolve({ ok: true, mode: 'local-pending' });
+    }
     return Promise.resolve({ ok: true, mode: 'local' });
   }
 
@@ -365,6 +409,9 @@
       return !(x.id && rec.id ? x.id === rec.id : recKey(x) === recKey(rec));
     });
     saveLocalRecs();
+    if (pendingRecs().length) {
+      savePending(pendingRecs().filter(function (x) { return recKey(x) !== recKey(rec); }));
+    }
     return Promise.resolve({ ok: true });
   }
 
@@ -434,17 +481,20 @@
               d.id = doc.id;
               list.push(d);
             });
-            state.recs = normalizeRecs(list);
-            storeSet(LS_RECS_CACHE, state.recs);
+            var serverRecs = normalizeRecs(list);
+            storeSet(LS_RECS_CACHE, serverRecs);
+            state.recs = mergeRecLists(serverRecs, pendingRecs());
             state.source = 'firebase';
             state.dbError = '';
             refreshRecUi();
+            flushPending();
             if (!settled) { settled = true; resolve(true); }
           }, function (err) {
             /* 권한·네트워크 오류: 화면을 멈추지 않고 로컬/캐시로 계속 */
             state.dbError = (err && (err.code || err.message)) || 'snapshot-error';
             state.source = 'local';
             if (!state.recs.length) loadLocalRecs();
+            else state.recs = mergeRecLists(state.recs, normalizeRecs(storeGet(LS_RECS, [])));
             refreshRecUi();
             if (!settled) { settled = true; resolve(false); }
           });
@@ -455,6 +505,7 @@
         state.db = null;
         state.source = 'local';
         if (!state.recs.length) loadLocalRecs();
+        else state.recs = mergeRecLists(state.recs, normalizeRecs(storeGet(LS_RECS, [])));
         refreshRecUi();
         return false;
       });
@@ -465,7 +516,7 @@
     if (note) {
       if (state.dbError) {
         note.className = 'share-note warn';
-        note.innerHTML = '⚠️ 공용 DB에 연결하지 못했습니다. 추천은 이 기기에만 저장됩니다. (' + esc(state.dbError) + ')';
+        note.innerHTML = '⚠️ 공용 DB에 연결하지 못했습니다. 지금 올린 추천은 <b>이 기기에 보관</b>했다가 연결이 돌아오면 자동으로 올립니다. (' + esc(state.dbError) + ')';
       } else if (state.source === 'firebase') {
         note.className = 'share-note on';
         note.innerHTML = '🌐 <b>공용 DB 연결됨</b> · 등록한 추천은 친구들 화면에 바로 나타납니다.';
@@ -3079,7 +3130,8 @@
         fitDistrict();
         openDetail(place.id);
       }
-      toast(nick + ' 추천으로 등록했어요 · ' + name, 3200);
+      toast(nick + ' 추천으로 등록했어요 · ' + name +
+        (res.mode === 'local-pending' ? ' (연결되면 자동으로 공유됩니다)' : ''), 3200);
     });
   }
 
@@ -3819,6 +3871,9 @@
     if (mqMobile.addEventListener) mqMobile.addEventListener('change', applyViewport);
     else if (mqMobile.addListener) mqMobile.addListener(applyViewport);
   }
+
+  /* 연결이 막혔다가 풀렸을 때 다시 붙어 보는 용도(관리·점검용) */
+  window.__foodmapRetryDb = function () { return startSharedDb(); };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
