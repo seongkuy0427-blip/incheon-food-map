@@ -5,50 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>인천 동선 맛집 지도</title>
 <meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을, 지역구로 고르면 동네 맛집을 모아 보여 주는 지도." />
+<meta name="theme-color" content="#F6F7F9" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css?v=4" />
+<link rel="stylesheet" href="assets/style.css?v=5" />
 </head>
 <body>
 <div id="app">
   <header class="topbar">
     <div class="brand">
-      <span class="brand-mark" aria-hidden="true">🗺️</span>
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-6.1-6.5-10.2A6.5 6.5 0 0 1 12 4.3a6.5 6.5 0 0 1 6.5 6.5C18.5 14.9 12 21 12 21z"/><circle cx="12" cy="10.6" r="2.3"/></svg>
+      </span>
       <div class="brand-text">
         <h1>인천 동선 맛집 지도</h1>
         <p class="sub">동선 위에서, 동네에서 고르는 인천 맛집 · 블루리본·백년가게·방송 맛집 <b id="brand-count">149</b>곳</p>
       </div>
     </div>
+    <div class="mobile-mode-slot" id="mobile-mode-slot">
+      <div class="mode-switch mobile-only-switch" role="tablist" aria-label="보기 방식">
+        <button type="button" class="mode-btn on" data-mode="route" role="tab" aria-selected="true">동선 내</button>
+        <button type="button" class="mode-btn" data-mode="district" role="tab" aria-selected="false">지역구 내</button>
+      </div>
+    </div>
     <div class="topbar-right">
-      <button class="key-btn" id="key-open" type="button" title="카카오 상호명 검색 키 (내 기기에만 저장)">🔑 <span>카카오 키</span></button>
-      <button class="add-btn" id="add-open" type="button">⭐ <span>내 맛집 추가</span></button>
+      <button class="key-btn" id="key-open" type="button" title="카카오 상호명 검색 키 (내 기기에만 저장)">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M17 6l2.5 2.5M14.5 8.5L17 11"/></svg></span><span class="lbl">카카오 키</span>
+      </button>
+      <button class="add-btn" id="add-open" type="button">
+        <span class="ico" aria-hidden="true">＋</span><span class="lbl">내 맛집 추가</span>
+      </button>
     </div>
   </header>
 
   <main class="layout">
     <aside class="panel" id="panel">
+      <div class="panel-grip" id="panel-grip" role="button" tabindex="0" aria-label="아래 패널 접기·펼치기"><span></span></div>
+
       <div class="mode-switch" role="tablist" aria-label="보기 방식">
-        <button type="button" class="mode-btn on" data-mode="route" role="tab" aria-selected="true">🛣️ 동선 내 맛집</button>
-        <button type="button" class="mode-btn" data-mode="district" role="tab" aria-selected="false">📍 지역구 내 맛집</button>
+        <button type="button" class="mode-btn on" data-mode="route" role="tab" aria-selected="true">
+          <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="18" r="2.1"/><circle cx="18.5" cy="6" r="2.1"/><path d="M7.6 18h3.9a3.6 3.6 0 0 0 0-7.2h-1a3.4 3.4 0 0 1 0-6.8h5.9"/></svg>동선 내
+        </button>
+        <button type="button" class="mode-btn" data-mode="district" role="tab" aria-selected="false">
+          <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.3-6-6.3-10A6.3 6.3 0 0 1 12 4.7 6.3 6.3 0 0 1 18.3 11c0 4-6.3 10-6.3 10z"/><circle cx="12" cy="10.8" r="2.2"/></svg>지역구 내
+        </button>
       </div>
 
       <section class="block" data-mode-block="route">
         <div class="route-row">
-          <div class="field">
+          <div class="field field-start">
             <label for="start-input">출발</label>
             <div class="input-wrap">
               <input id="start-input" type="text" placeholder="장소·주소·역 검색" autocomplete="off" />
               <button class="mini" id="start-pick" type="button" title="지도에서 출발지 찍기">지도</button>
-              <button class="mini icon" id="start-gps" type="button" title="현재 위치를 출발지로">📍</button>
+              <button class="mini icon" id="start-gps" type="button" title="현재 위치를 출발지로" aria-label="현재 위치를 출발지로">◎</button>
             </div>
             <div class="results" id="start-results" hidden></div>
           </div>
-          <div class="field">
+          <div class="field field-end">
             <label for="end-input">도착</label>
             <div class="input-wrap">
               <input id="end-input" type="text" placeholder="장소·주소·역 검색" autocomplete="off" />
               <button class="mini" id="end-pick" type="button" title="지도에서 도착지 찍기">지도</button>
-              <button class="mini icon" id="end-gps" type="button" title="현재 위치를 도착지로">📍</button>
+              <button class="mini icon" id="end-gps" type="button" title="현재 위치를 도착지로" aria-label="현재 위치를 도착지로">◎</button>
             </div>
             <div class="results" id="end-results" hidden></div>
           </div>
@@ -82,7 +103,7 @@
       </section>
 
       <button class="filters-toggle" id="filters-toggle" type="button" aria-expanded="false">
-        <span>필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
+        <span class="ft-label">필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
       </button>
       <div class="filters" id="filters">
         <section class="block" data-mode-block="route">
@@ -90,8 +111,8 @@
             <h2>이동 수단</h2>
           </div>
           <div class="seg" role="group" aria-label="이동 수단">
-            <button class="seg-btn active" data-travel="car" type="button">🚗 자동차</button>
-            <button class="seg-btn" data-travel="transit" type="button">🚇 대중교통</button>
+            <button class="seg-btn active" data-travel="car" type="button"><svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h14M6.5 16v2M17.5 16v2"/><path d="M4.5 16v-3.2L6.6 8h10.8l2.1 4.8V16z"/><circle cx="8" cy="12.8" r=".8"/><circle cx="16" cy="12.8" r=".8"/></svg>자동차</button>
+            <button class="seg-btn" data-travel="transit" type="button"><svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="12.5" rx="2.6"/><path d="M6 11h12M9.5 20l1.6-3.5M14.5 20l-1.6-3.5"/><circle cx="9.4" cy="13.8" r=".7"/><circle cx="14.6" cy="13.8" r=".7"/></svg>대중교통</button>
           </div>
           <p class="hint" id="mode-hint">도로 경로를 따라 실제 주행 동선을 계산합니다.</p>
         </section>
@@ -109,17 +130,11 @@
           </div>
         </section>
 
-        <section class="block">
-          <div class="block-head">
-            <h2>등급</h2>
-          </div>
-          <div class="chips tier-chips" id="tier-chips" role="group" aria-label="등급 필터"></div>
-          <div class="hidden-line" id="hidden-line" hidden>
-            <span id="hidden-note"></span>
-            <button type="button" class="link-btn" id="hidden-restore">숨긴 가게 복원</button>
-          </div>
-          <div class="quick-add"><button type="button" class="link-btn" id="add-open-2">⭐ 내 맛집 추가</button></div>
-        </section>
+      </div>
+
+      <div class="hidden-line" id="hidden-line" hidden>
+        <span id="hidden-note"></span>
+        <button type="button" class="link-btn" id="hidden-restore">복원</button>
       </div>
 
       <section class="block summary-block">
@@ -134,13 +149,14 @@
         <div id="rest-list" class="rest-list"></div>
       </section>
 
-      <footer class="panel-foot">
+      <details class="panel-foot">
+        <summary>데이터 출처 · 등급 기준</summary>
         <p>등급 표기: '블루리본'은 블루리본 서베이 2025 인천 선정작, '로컬'은 찐후기·백년가게·방송 맛집·노포·국민맛집을 묶은 구분입니다. 각 가게 카드에는 세부 근거(백년가게·방송 맛집·노포·국민맛집·찐후기)가 표시됩니다.</p>
         <p id="tier-note-foot"></p>
-      </footer>
+      </details>
     </aside>
 
-    <div class="map-wrap">
+    <div class="map-wrap" id="map-wrap">
       <div id="map" role="application" aria-label="인천 맛집 지도"></div>
       <div class="legend">
         <span><i class="dot michelin"></i>미쉐린</span>
@@ -148,7 +164,12 @@
         <span><i class="dot local"></i>로컬</span>
         <span><i class="dot custom"></i>내 맛집</span>
       </div>
-      <button class="map-ctrl" id="fit-route" type="button" title="경로 전체 보기">경로 보기</button>
+      <div class="map-ctrl-group">
+        <button class="map-ctrl" id="fit-route" type="button" title="경로 전체 보기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 15v5h-5M20 9V4h-5M4 15v5h5"/></svg>
+          <span>경로 보기</span>
+        </button>
+      </div>
     </div>
   </main>
 </div>
@@ -156,6 +177,7 @@
 <div class="sheet" id="detail" hidden>
   <div class="sheet-backdrop" data-close="1"></div>
   <article class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="sheet-grip" id="detail-grip" aria-hidden="true"><span></span></div>
     <button class="sheet-close" id="detail-close" type="button" aria-label="닫기">✕</button>
     <div id="detail-content"></div>
   </article>
@@ -165,12 +187,12 @@
   <div class="modal-backdrop" data-close="1"></div>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="add-title">
     <button class="sheet-close" id="add-close" type="button" aria-label="닫기">✕</button>
-    <h2 id="add-title">⭐ 내 맛집 추가</h2>
+    <h2 id="add-title">내 맛집 추가</h2>
     <p class="modal-sub">가게 이름이나 주소로 찾거나, 지도에서 위치를 직접 찍어 저장하세요. 이 기기에 저장되고 백업으로 옮길 수 있습니다.</p>
 
     <div class="key-box">
       <button type="button" class="key-toggle" id="kakao-key-toggle" aria-expanded="false" aria-controls="kakao-key-panel">
-        <span>🔑 카카오 상호명 검색 키 <em>(내 기기에만 저장)</em></span>
+        <span>카카오 상호명 검색 키 <em>(내 기기에만 저장)</em></span>
         <span class="key-state" id="kakao-key-state">미등록</span>
         <span class="caret" aria-hidden="true">▾</span>
       </button>
@@ -199,7 +221,7 @@
       <div class="results" id="add-results" hidden></div>
     </div>
 
-    <button class="btn wide" id="add-pick" type="button">🗺️ 지도에서 직접 클릭해 위치 찍기</button>
+    <button class="btn wide" id="add-pick" type="button">지도에서 직접 클릭해 위치 찍기</button>
     <p class="coord-line" id="add-coord">위치를 검색하거나 지도에서 찍어 주세요.</p>
 
     <div class="form-grid">
@@ -217,6 +239,7 @@
       <label>업종
         <select id="add-cat">
           <option value="한식">한식</option>
+          <option value="국밥">국밥</option>
           <option value="중식">중식</option>
           <option value="일식">일식</option>
           <option value="양식">양식</option>
@@ -258,6 +281,6 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/app.js?v=4"></script>
+<script src="assets/app.js?v=5"></script>
 </body>
 </html>
