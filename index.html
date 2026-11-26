@@ -4,13 +4,13 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>인천 동선 맛집 지도</title>
-<meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을, 지역구로 고르면 동네 맛집을, 내 위치나 인천 6개 지하철 노선의 역 반경 안 맛집을 가까운 순·추천순으로 보여 주는 지도." />
+<meta name="description" content="친구들과 함께 고르는 인천 맛집 지도. 출발지·도착지 동선, 지역구, 내 위치, 인천 6개 지하철 노선 역 반경으로 맛집을 찾고, 친구가 추천한 집과 추천 랭킹을 실시간으로 함께 봅니다." />
 <meta name="theme-color" content="#F6F7F9" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css?v=9" />
+<link rel="stylesheet" href="assets/style.css?v=10" />
 </head>
 <body>
 <div id="app">
@@ -37,7 +37,7 @@
         <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M17 6l2.5 2.5M14.5 8.5L17 11"/></svg></span><span class="lbl">카카오 키</span>
       </button>
       <button class="add-btn" id="add-open" type="button">
-        <span class="ico" aria-hidden="true">＋</span><span class="lbl">내 맛집 추가</span>
+        <span class="ico" aria-hidden="true">＋</span><span class="lbl">맛집 추천</span>
       </button>
     </div>
   </header>
@@ -156,6 +156,15 @@
         <div class="chips cat-chips" id="cat-chips" role="group" aria-label="식사 세부 업종"></div>
       </section>
 
+      <section class="block rec-block" id="rec-block">
+        <div class="block-head">
+          <h2>🏆 친구 추천 현황</h2>
+          <span class="count" id="rec-count"></span>
+        </div>
+        <div class="chips rec-chips" id="rec-chips" role="group" aria-label="추천한 친구별 보기"></div>
+        <p class="hint" id="rec-hint">친구가 고른 집이 여기에 쌓입니다. 이름을 누르면 그 친구 추천만 모아 봅니다.</p>
+      </section>
+
       <button class="filters-toggle" id="filters-toggle" type="button" aria-expanded="false">
         <span class="ft-label">필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
       </button>
@@ -217,7 +226,7 @@
         <span><i class="dot michelin"></i>미쉐린</span>
         <span><i class="dot blueribbon"></i>블루리본</span>
         <span><i class="dot local"></i>로컬</span>
-        <span><i class="dot custom"></i>내 맛집</span>
+        <span><i class="dot custom"></i>친구 추천</span>
       </div>
       <div class="map-ctrl-group">
         <button class="map-ctrl" id="fit-route" type="button" title="경로 전체 보기">
@@ -245,8 +254,50 @@
   <div class="modal-backdrop" data-close="1"></div>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="add-title">
     <button class="sheet-close" id="add-close" type="button" aria-label="닫기">✕</button>
-    <h2 id="add-title">내 맛집 추가</h2>
-    <p class="modal-sub">가게 이름이나 주소로 찾거나, 지도에서 위치를 직접 찍어 저장하세요. 이 기기에 저장되고 백업으로 옮길 수 있습니다.</p>
+    <h2 id="add-title">맛집 추천하기</h2>
+    <p class="modal-sub">내 이름과 가게만 고르면 끝이에요. 한 줄 평은 짧게, 없어도 됩니다.</p>
+
+    <label class="rec-field"><span class="lbl">내 이름 <span class="req">*</span></span>
+      <input id="add-nick" type="text" maxlength="12" placeholder="예: 성규" autocomplete="nickname" />
+      <em class="fld-note">이 이름으로 <b>성규 추천</b> 배지와 랭킹이 매겨집니다. 다음에 또 쓰도록 기억해 둡니다.</em>
+    </label>
+
+    <div class="rec-field">
+      <label class="lbl" for="add-search">가게 찾기 <span class="req">*</span></label>
+      <div class="input-wrap">
+        <input id="add-search" type="text" placeholder="상호명으로 검색 (예: 윤가네바지락칼국수)" autocomplete="off" />
+        <button class="mini" id="add-search-btn" type="button">검색</button>
+      </div>
+      <p class="search-hint" id="add-search-hint"></p>
+      <div class="results" id="add-results" hidden></div>
+    </div>
+
+    <div class="picked" id="add-picked" hidden></div>
+
+    <label class="rec-field"><span class="lbl">가게명 <span class="req">*</span></span>
+      <input id="add-name" type="text" maxlength="40" placeholder="검색하면 자동으로 채워집니다" />
+    </label>
+    <button class="btn wide pick-btn" id="add-pick" type="button">지도에서 직접 위치 찍기</button>
+    <p class="coord-line" id="add-coord">가게를 검색하거나 지도에서 위치를 찍어 주세요.</p>
+
+    <label class="rec-field"><span class="lbl">한 줄 평 <em>선택</em></span>
+      <input id="add-note" type="text" maxlength="60" placeholder="예: 국밥 진하고 주차도 편해요" />
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn primary" id="add-save" type="button">추천 등록</button>
+      <button class="btn" id="add-cancel" type="button">취소</button>
+    </div>
+
+    <p class="share-note" id="share-note"></p>
+
+    <div class="modal-foot">
+      <button class="link-btn" id="export-btn" type="button">추천 목록 백업(JSON)</button>
+      <span class="foot-dot">·</span>
+      <button class="link-btn" id="import-btn" type="button">불러오기</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden />
+      <span class="count" id="custom-count"></span>
+    </div>
 
     <div class="key-box">
       <button type="button" class="key-toggle" id="kakao-key-toggle" aria-expanded="false" aria-controls="kakao-key-panel">
@@ -283,73 +334,8 @@
           <li><b>앱 → 플랫폼 키</b>에서 <b>REST API 키</b>를 위 칸에, <b>JavaScript 키</b>를 아래 칸에 붙여넣고 저장</li>
           <li><b>플랫폼 → Web 사이트 도메인</b>에 <b>https://seongkuy0427-blip.github.io</b> 등록 (지도가 안 뜰 때 확인)</li>
         </ol>
-        <p class="key-note">키는 이 브라우저(localStorage)에만 저장되고 GitHub에는 올라가지 않습니다. JavaScript 키를 넣으면 진짜 카카오맵으로, 없거나 막히면 기본 지도(OSM)로 자동 전환됩니다.</p>
+        <p class="key-note">키는 이 브라우저(localStorage)에만 저장되고 GitHub에는 올라가지 않습니다. JavaScript 키를 넣으면 진짜 카카오맵과 상호명 검색이 함께 동작하고, 없거나 막히면 기본 지도(OSM)로 자동 전환됩니다.</p>
       </div>
-    </div>
-
-    <div class="field">
-      <label for="add-search">가게·주소 검색</label>
-      <div class="input-wrap">
-        <input id="add-search" type="text" placeholder="예: 윤가네바지락칼국수, 부평 순대국, 인천 연수구 송도동 …" autocomplete="off" />
-        <button class="mini" id="add-search-btn" type="button">검색</button>
-      </div>
-      <p class="search-hint" id="add-search-hint"></p>
-      <div class="results" id="add-results" hidden></div>
-    </div>
-
-    <button class="btn wide" id="add-pick" type="button">지도에서 직접 클릭해 위치 찍기</button>
-    <p class="coord-line" id="add-coord">위치를 검색하거나 지도에서 찍어 주세요.</p>
-
-    <div class="form-grid">
-      <label class="full"><span class="lbl">가게명 <span class="req">*</span></span>
-        <input id="add-name" type="text" placeholder="예: 순대국집" />
-      </label>
-      <label>지역구
-        <select id="add-district">
-          <option value="">선택</option>
-          <option>제물포구</option><option>영종구</option><option>미추홀구</option><option>남동구</option>
-          <option>연수구</option><option>부평구</option><option>서해구</option><option>검단구</option>
-          <option>계양구</option><option>강화군</option>
-        </select>
-      </label>
-      <label>업종
-        <select id="add-cat">
-          <option value="한식">한식</option>
-          <option value="국밥">국밥</option>
-          <option value="중식">중식</option>
-          <option value="일식">일식</option>
-          <option value="양식">양식</option>
-          <option value="해산물">해산물</option>
-          <option value="고기">고기</option>
-          <option value="면·분식">면·분식</option>
-          <option value="카페·디저트">카페·디저트</option>
-        </select>
-      </label>
-      <label class="full">대표 메뉴·가격대
-        <input id="add-menu" type="text" placeholder="예: 순대국 9,000원 / 모둠전골 3만원" />
-      </label>
-      <label class="full">내 한줄 메모
-        <input id="add-memo" type="text" placeholder="예: 사장님이 친절, 주차는 골목" />
-      </label>
-      <label class="full">주소 (선택)
-        <input id="add-address" type="text" placeholder="검색하면 자동으로 채워집니다" />
-      </label>
-      <label class="full">전화 (선택)
-        <input id="add-phone" type="tel" placeholder="검색하면 자동으로 채워집니다" />
-      </label>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn primary" id="add-save" type="button">저장하고 지도에서 보기</button>
-      <button class="btn" id="add-cancel" type="button">취소</button>
-    </div>
-
-    <div class="modal-foot">
-      <button class="link-btn" id="export-btn" type="button">내 맛집 백업(JSON)</button>
-      <span class="foot-dot">·</span>
-      <button class="link-btn" id="import-btn" type="button">불러오기</button>
-      <input type="file" id="import-file" accept="application/json,.json" hidden />
-      <span class="count" id="custom-count"></span>
     </div>
   </div>
 </div>
@@ -357,6 +343,7 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/app.js?v=9"></script>
+<script src="assets/config.js?v=9"></script>
+<script src="assets/app.js?v=10"></script>
 </body>
 </html>
