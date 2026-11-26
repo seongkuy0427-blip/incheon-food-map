@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>인천 동선 맛집 지도</title>
-<meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을 등급·거리별로 골라 주는 지도." />
+<meta name="description" content="출발지와 도착지를 정하면 가는 길 위의 인천 맛집을, 지역구로 고르면 동네 맛집을 모아 보여 주는 지도." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="assets/style.css" />
@@ -16,22 +16,22 @@
       <span class="brand-mark" aria-hidden="true">🗺️</span>
       <div class="brand-text">
         <h1>인천 동선 맛집 지도</h1>
-        <p class="sub">가는 길 위에서 고르는 인천 맛집 · 블루리본·찐후기 40곳</p>
+        <p class="sub">동선 위에서, 동네에서 고르는 인천 맛집 · 블루리본·백년가게·방송 맛집 <b id="brand-count">148</b>곳</p>
       </div>
     </div>
     <div class="topbar-right">
-      <label class="region-wrap">
-        <span class="sr-only">지역</span>
-        <select id="region-select" aria-label="지역 선택">
-          <option value="인천">인천광역시</option>
-        </select>
-      </label>
+      <button class="add-btn" id="add-open" type="button">⭐ <span>내 맛집 추가</span></button>
     </div>
   </header>
 
   <main class="layout">
     <aside class="panel" id="panel">
-      <section class="block">
+      <div class="mode-switch" role="tablist" aria-label="보기 방식">
+        <button type="button" class="mode-btn on" data-mode="route" role="tab" aria-selected="true">🛣️ 동선 내 맛집</button>
+        <button type="button" class="mode-btn" data-mode="district" role="tab" aria-selected="false">📍 지역구 내 맛집</button>
+      </div>
+
+      <section class="block" data-mode-block="route">
         <div class="route-row">
           <div class="field">
             <label for="start-input">출발</label>
@@ -52,50 +52,72 @@
             <div class="results" id="end-results" hidden></div>
           </div>
         </div>
-        <div class="chips" id="hub-chips" aria-label="주요 거점 빠른 선택"></div>
+        <div class="chips hub-chips" id="hub-chips" aria-label="주요 거점 빠른 선택"></div>
         <div class="pick-note" id="pick-note" hidden>지도를 클릭해 <b>출발지</b>를 찍으세요. (Esc로 취소)</div>
+      </section>
+
+      <section class="block district-block" data-mode-block="district" hidden>
+        <div class="block-head">
+          <h2>지역구</h2>
+          <span class="count" id="district-count"></span>
+        </div>
+        <select id="district-select" class="big-select" aria-label="지역구 선택">
+          <option value="all">전체 지역구</option>
+        </select>
+        <p class="hint">동선과 상관없이 고른 구의 맛집을 지도에 모두 표시합니다. 구를 바꾸면 지도가 그 동네로 이동합니다.</p>
+      </section>
+
+      <section class="block category-block">
+        <div class="block-head">
+          <h2>업종</h2>
+          <span class="count" id="cat-count"></span>
+        </div>
+        <div class="seg cat-group" role="group" aria-label="업종 큰 구분">
+          <button class="seg-btn active" data-group="all" type="button">전체</button>
+          <button class="seg-btn" data-group="meal" type="button">식사</button>
+          <button class="seg-btn" data-group="cafe" type="button">카페·디저트</button>
+        </div>
+        <div class="chips cat-chips" id="cat-chips" role="group" aria-label="식사 세부 업종"></div>
       </section>
 
       <button class="filters-toggle" id="filters-toggle" type="button" aria-expanded="false">
         <span>필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
       </button>
       <div class="filters" id="filters">
-      <section class="block">
-        <div class="block-head">
-          <h2>이동 수단</h2>
-        </div>
-        <div class="seg" role="group" aria-label="이동 수단">
-          <button class="seg-btn active" data-mode="car" type="button">🚗 자동차</button>
-          <button class="seg-btn" data-mode="transit" type="button">🚇 대중교통</button>
-        </div>
-        <p class="hint" id="mode-hint">도로 경로를 따라 실제 주행 동선을 계산합니다.</p>
-      </section>
+        <section class="block" data-mode-block="route">
+          <div class="block-head">
+            <h2>이동 수단</h2>
+          </div>
+          <div class="seg" role="group" aria-label="이동 수단">
+            <button class="seg-btn active" data-travel="car" type="button">🚗 자동차</button>
+            <button class="seg-btn" data-travel="transit" type="button">🚇 대중교통</button>
+          </div>
+          <p class="hint" id="mode-hint">도로 경로를 따라 실제 주행 동선을 계산합니다.</p>
+        </section>
 
-      <section class="block">
-        <div class="block-head">
-          <h2>동선 반경</h2>
-          <span class="count" id="result-count"></span>
-        </div>
-        <div class="seg small" role="group" aria-label="동선 반경">
-          <button class="seg-btn" data-radius="500" type="button">500m</button>
-          <button class="seg-btn active" data-radius="1000" type="button">1km</button>
-          <button class="seg-btn" data-radius="2000" type="button">2km</button>
-          <button class="seg-btn" data-radius="0" type="button">전체</button>
-        </div>
-      </section>
+        <section class="block" data-mode-block="route">
+          <div class="block-head">
+            <h2>동선 반경</h2>
+            <span class="count" id="result-count"></span>
+          </div>
+          <div class="seg small" role="group" aria-label="동선 반경">
+            <button class="seg-btn" data-radius="500" type="button">500m</button>
+            <button class="seg-btn active" data-radius="1000" type="button">1km</button>
+            <button class="seg-btn" data-radius="2000" type="button">2km</button>
+            <button class="seg-btn" data-radius="0" type="button">전체</button>
+          </div>
+        </section>
 
-      <section class="block">
-        <div class="block-head">
-          <h2>등급</h2>
-        </div>
-        <div class="chips tier-chips" id="tier-chips" role="group" aria-label="등급 필터"></div>
-        <div class="district-row">
-          <label for="district-select">지역구</label>
-          <select id="district-select">
-            <option value="all">전체 지역구</option>
-          </select>
-        </div>
-      </section>
+        <section class="block">
+          <div class="block-head">
+            <h2>등급</h2>
+          </div>
+          <div class="chips tier-chips" id="tier-chips" role="group" aria-label="등급 필터"></div>
+          <div class="hidden-line" id="hidden-line" hidden>
+            <span id="hidden-note"></span>
+            <button type="button" class="link-btn" id="hidden-restore">숨긴 가게 복원</button>
+          </div>
+        </section>
       </div>
 
       <section class="block summary-block">
@@ -104,14 +126,14 @@
 
       <section class="block list-block">
         <div class="block-head">
-          <h2>동선 위 맛집</h2>
+          <h2 id="list-title">동선 위 맛집</h2>
           <span class="sort-note" id="sort-note"></span>
         </div>
         <div id="rest-list" class="rest-list"></div>
       </section>
 
       <footer class="panel-foot">
-        <p>등급 표기: 블루리본 서베이는 2025년 인천 선정작, '찐후기'는 광고·협찬 없이 방문자 후기로 검증된 곳입니다.</p>
+        <p>등급 표기: '블루리본'은 블루리본 서베이 2025 인천 선정작, '로컬'은 찐후기·백년가게·방송 맛집·노포·국민맛집을 묶은 구분입니다. 각 가게 카드에는 세부 근거(백년가게·방송 맛집·노포·국민맛집·찐후기)가 표시됩니다.</p>
         <p id="tier-note-foot"></p>
       </footer>
     </aside>
@@ -121,7 +143,8 @@
       <div class="legend">
         <span><i class="dot michelin"></i>미쉐린</span>
         <span><i class="dot blueribbon"></i>블루리본</span>
-        <span><i class="dot local"></i>찐후기</span>
+        <span><i class="dot local"></i>로컬</span>
+        <span><i class="dot custom"></i>내 맛집</span>
       </div>
       <button class="map-ctrl" id="fit-route" type="button" title="경로 전체 보기">경로 보기</button>
     </div>
@@ -134,6 +157,75 @@
     <button class="sheet-close" id="detail-close" type="button" aria-label="닫기">✕</button>
     <div id="detail-content"></div>
   </article>
+</div>
+
+<div class="modal" id="add-modal" hidden>
+  <div class="modal-backdrop" data-close="1"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="add-title">
+    <button class="sheet-close" id="add-close" type="button" aria-label="닫기">✕</button>
+    <h2 id="add-title">⭐ 내 맛집 추가</h2>
+    <p class="modal-sub">가게 이름이나 주소로 찾거나, 지도에서 위치를 직접 찍어 저장하세요. 이 기기에 저장되고 백업으로 옮길 수 있습니다.</p>
+
+    <div class="field">
+      <label for="add-search">가게·주소 검색</label>
+      <div class="input-wrap">
+        <input id="add-search" type="text" placeholder="예: 부평 순대국, 인천 연수구 송도동 …" autocomplete="off" />
+        <button class="mini" id="add-search-btn" type="button">검색</button>
+      </div>
+      <div class="results" id="add-results" hidden></div>
+    </div>
+
+    <button class="btn wide" id="add-pick" type="button">🗺️ 지도에서 직접 클릭해 위치 찍기</button>
+    <p class="coord-line" id="add-coord">위치를 검색하거나 지도에서 찍어 주세요.</p>
+
+    <div class="form-grid">
+      <label class="full"><span class="lbl">가게명 <span class="req">*</span></span>
+        <input id="add-name" type="text" placeholder="예: 순대국집" />
+      </label>
+      <label>지역구
+        <select id="add-district">
+          <option value="">선택</option>
+          <option>제물포구</option><option>영종구</option><option>미추홀구</option><option>남동구</option>
+          <option>연수구</option><option>부평구</option><option>서해구</option><option>검단구</option>
+          <option>계양구</option><option>강화군</option>
+        </select>
+      </label>
+      <label>업종
+        <select id="add-cat">
+          <option value="한식">한식</option>
+          <option value="중식">중식</option>
+          <option value="일식">일식</option>
+          <option value="양식">양식</option>
+          <option value="해산물">해산물</option>
+          <option value="고기">고기</option>
+          <option value="면·분식">면·분식</option>
+          <option value="카페·디저트">카페·디저트</option>
+        </select>
+      </label>
+      <label class="full">대표 메뉴·가격대
+        <input id="add-menu" type="text" placeholder="예: 순대국 9,000원 / 모둠전골 3만원" />
+      </label>
+      <label class="full">내 한줄 메모
+        <input id="add-memo" type="text" placeholder="예: 사장님이 친절, 주차는 골목" />
+      </label>
+      <label class="full">주소 (선택)
+        <input id="add-address" type="text" placeholder="검색하면 자동으로 채워집니다" />
+      </label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn primary" id="add-save" type="button">저장하고 지도에서 보기</button>
+      <button class="btn" id="add-cancel" type="button">취소</button>
+    </div>
+
+    <div class="modal-foot">
+      <button class="link-btn" id="export-btn" type="button">내 맛집 백업(JSON)</button>
+      <span class="foot-dot">·</span>
+      <button class="link-btn" id="import-btn" type="button">불러오기</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden />
+      <span class="count" id="custom-count"></span>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast" hidden></div>
