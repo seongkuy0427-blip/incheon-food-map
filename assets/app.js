@@ -950,6 +950,24 @@
     if (el.keyOpen) el.keyOpen.classList.toggle('on', !!(kakaoJsKey() || kakaoKey()));
   }
 
+  /* 카카오맵 저작권 로고(ⓐ map.kakao.com)는 왼쪽 아래에 그려지는데, 떠 있는 패널·바텀시트에
+     가리지 않도록 패널 오른쪽(모바일은 시트 위)으로 옮겨 둔다. 카카오 지도 정책상 로고는 가리면 안 된다. */
+  function placeKakaoLogo() {
+    if (engineState.kind !== 'kakao') return;
+    var img = document.querySelector('#map img[src*="m_bi_b.png"]');
+    if (!img) return;
+    var box = img.parentNode && img.parentNode.parentNode && img.parentNode.parentNode.parentNode;
+    if (!box || !box.style) return;
+    if (isMobile()) {
+      box.style.left = '10px';
+      box.style.bottom = Math.round(sheetHeight() + 44) + 'px';
+    } else {
+      var pw = el.panel ? el.panel.getBoundingClientRect().width : 392;
+      box.style.left = Math.round(pw + 34) + 'px';
+      box.style.bottom = '4px';
+    }
+  }
+
   function kakaoTilesPresent() {
     if (document.querySelectorAll('#map img').length > 0) return true;
     var nodes = document.querySelectorAll('#map div');
@@ -991,6 +1009,11 @@
 
     engine = kind === 'kakao' ? createKakaoEngine(center, zoom) : createLeafletEngine(center, zoom);
     engineState.kind = kind;
+    if (kind === 'kakao') {
+      setTimeout(placeKakaoLogo, 60);
+      setTimeout(placeKakaoLogo, 600);
+      setTimeout(placeKakaoLogo, 1600);
+    }
     if (kind === 'kakao') engineState.fallback = false;
 
     engine.on('click', handleMapClick);
@@ -3599,10 +3622,11 @@
     setSheetHeight(Math.round(window.innerHeight * sheetState.snaps[idx]), true);
     document.body.classList.toggle('sheet-full', idx === sheetState.snaps.length - 1);
     invalidateMap(320);
+    placeKakaoLogo();
   }
 
   function invalidateMap(delay) {
-    setTimeout(function () { if (engine) engine.invalidate(); }, delay || 80);
+    setTimeout(function () { if (engine) engine.invalidate(); placeKakaoLogo(); }, delay || 80);
   }
 
   function applyViewport() {
