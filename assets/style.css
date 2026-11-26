@@ -128,7 +128,7 @@ a{color:inherit}
 
 /* ── 모드 전환 ───────────────────────────────────── */
 .mode-switch{
-  display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--slate-100);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:var(--slate-100);
   border-radius:13px;padding:3px;margin:2px 0 4px;
 }
 .mode-btn{
@@ -138,6 +138,24 @@ a{color:inherit}
 }
 .mode-btn:hover{color:var(--ink)}
 .mode-btn.on{background:#fff;color:var(--accent-ink);box-shadow:0 1px 2px rgba(15,23,42,.10),0 0 0 .5px rgba(15,23,42,.04)}
+
+/* ── 정렬 전환 · 내 주변 ───────────────────────── */
+button.sort-note{
+  border:0;background:transparent;padding:2px 2px;margin:0;cursor:pointer;font:inherit;
+  font-size:11.5px;color:var(--accent-ink);font-weight:600;border-radius:6px;
+  transition:background .14s var(--ease),color .14s var(--ease);
+}
+button.sort-note:hover{background:var(--accent-soft,#EEF2FF)}
+button.sort-note.static,button.sort-note:disabled{color:var(--ink-3);cursor:default;background:transparent;font-weight:500}
+.near-pin{display:block;width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid #4F46E5;
+  box-shadow:0 0 0 6px rgba(99,102,241,.16),0 6px 16px rgba(49,46,129,.28);position:relative}
+.near-pin i{position:absolute;inset:6px;border-radius:50%;background:#4F46E5}
+.near-tip{background:rgba(49,46,129,.92);color:#fff;border:0;border-radius:8px;padding:3px 8px;
+  font-size:11px;font-weight:600;box-shadow:0 6px 18px rgba(15,23,42,.18)}
+.near-tip::before{display:none}
+.card-dist.near{color:#4F46E5;font-weight:720}
+.near-block .hint b{color:var(--ink-2)}
+.near-block .seg{margin-top:10px}
 
 /* ── 출발·도착 ───────────────────────────────────── */
 .route-row{display:grid;gap:10px}
@@ -599,7 +617,7 @@ a{color:inherit}
   .brand-text h1{font-size:11.5px;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .brand-text .sub{display:none}
   .mobile-mode-slot{display:flex;flex:1 1 auto;min-width:0;justify-content:center}
-  .mobile-mode-slot .mode-switch{margin:0;padding:2px;border-radius:11px;width:100%;max-width:172px;display:grid}
+  .mobile-mode-slot .mode-switch{margin:0;padding:2px;border-radius:11px;width:100%;max-width:238px;display:grid}
   .mobile-mode-slot .mode-btn{padding:7px 6px;font-size:11.5px;border-radius:9px}
   .mobile-mode-slot .mode-btn .mi{display:none}
   .topbar-right{gap:6px;margin-left:0}

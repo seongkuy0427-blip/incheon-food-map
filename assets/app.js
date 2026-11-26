@@ -24,6 +24,7 @@
   var ALL_CATS = MEAL_CATS.concat(['카페·디저트']);
   var LS_CUSTOM = 'incheonFoodMap.custom.v1';
   var LS_HIDDEN = 'incheonFoodMap.hidden.v1';
+  var LS_NEAR = 'incheonFoodMap.near.v1';
   var LS_KAKAO = 'kakaoRestKey';
 
   var HUBS = [
@@ -52,9 +53,12 @@
     meta: {},
     start: null,
     end: null,
-    mode: 'route',          /* route | district */
+    mode: 'route',          /* route | district | near */
     travel: 'car',
     radius: 1000,
+    routeSort: 'along',     /* along | near */
+    near: null,             /* 기준 위치 {name, lat, lng} */
+    nearRadius: 3000,       /* 1000 | 3000 | 5000 */
     foodGroup: 'all',       /* all | meal | cafe */
     cats: [],               /* 선택한 식사 세부 업종 */
     tiers: { michelin: true, blueribbon: true, local: true, custom: true },
@@ -65,7 +69,8 @@
     loading: false
   };
 
-  var map, layerRest, layerRoute, layerHubs;
+  var map, layerRest, layerRoute, layerHubs, layerNear;
+  var nearCircle = null;
   var markers = {};
   var zoomTimer = null;
   var $ = function (id) { return document.getElementById(id); };
@@ -267,6 +272,7 @@
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     layerRoute = L.layerGroup().addTo(map);
     layerHubs = L.layerGroup().addTo(map);
+    layerNear = L.layerGroup().addTo(map);
     layerRest = L.layerGroup().addTo(map);
     window.__map = map;
 
@@ -305,6 +311,16 @@
     });
   }
 
+  /* 내 주변 기준 위치 마커 */
+  function nearIcon() {
+    return L.divIcon({
+      className: 'near-wrap',
+      html: '<span class="near-pin"><i></i></span>',
+      iconSize: [26, 26],
+      iconAnchor: [13, 13]
+    });
+  }
+
   /* ── 데이터 ───────────────────────────────────── */
   function loadData() {
     state.loading = true;
@@ -327,10 +343,15 @@
         renderFootNotes();
         renderList();
         renderMarkers();
-        if (state.mode === 'district') fitDistrict(); else if (state.route) fitRouteView(); else fitAll();
+        if (state.mode === 'district') fitDistrict();
+        else if (state.mode === 'near') { nearNowText(); drawNear(); fitNear(); }
+        else if (state.route) fitRouteView();
+        else fitAll();
         updateCustomCount();
         renderHiddenLine();
         el.brandCount.textContent = state.data.length;
+        var totalEl = $('data-total');
+        if (totalEl) totalEl.textContent = state.base.length;
       })
       .catch(function (err) {
         state.loading = false;
@@ -616,6 +637,14 @@
       toast('지도에서 위치를 찍었습니다. 가게 정보를 채워 주세요.');
       return;
     }
+    if (state.picking === 'near') {
+      state.picking = null;
+      document.querySelector('.map-wrap').classList.remove('picking');
+      el.pickNote.hidden = true;
+      if (el.nearPick) el.nearPick.classList.remove('active');
+      setNear({ name: '지도에서 찍은 위치', lat: latlng.lat, lng: latlng.lng });
+      return;
+    }
     var kind = state.picking;
     var p = {
       name: '지도 선택 지점 (' + latlng.lat.toFixed(4) + ', ' + latlng.lng.toFixed(4) + ')',
@@ -630,9 +659,11 @@
     state.picking = kind;
     document.querySelector('.map-wrap').classList.add('picking');
     el.pickNote.hidden = false;
-    el.pickNote.innerHTML = '지도를 클릭해 <b>' + (kind === 'start' ? '출발지' : '도착지') + '</b>를 찍으세요. (Esc로 취소)';
-    (kind === 'start' ? el.startPick : el.endPick).classList.add('active');
-    toast('지도를 클릭해 위치를 지정하세요.');
+    var label = kind === 'start' ? '출발지' : kind === 'end' ? '도착지' : '기준 위치';
+    el.pickNote.innerHTML = '지도를 클릭해 <b>' + label + '</b>를 찍으세요. (Esc로 취소)';
+    var btn = kind === 'start' ? el.startPick : kind === 'end' ? el.endPick : el.nearPick;
+    if (btn) btn.classList.add('active');
+    toast('지도를 클릭해 ' + label + '를 지정하세요.');
   }
 
   function clearPick() {
@@ -641,6 +672,7 @@
     el.pickNote.hidden = true;
     el.startPick.classList.remove('active');
     el.endPick.classList.remove('active');
+    if (el.nearPick) el.nearPick.classList.remove('active');
   }
 
   function useGps(kind) {
@@ -787,15 +819,200 @@
     map.fitBounds(L.latLngBounds(rows.map(function (r) { return [r.lat, r.lng]; })), opts);
   }
 
+  /* ── 내 주변 ─────────────────────────────────── */
+  function saveNear() {
+    storeSet(LS_NEAR, { near: state.near, radius: state.nearRadius });
+  }
+
+  function nearBounds() {
+    if (!state.near) return null;
+    var dLat = state.nearRadius / 111320;
+    var dLng = state.nearRadius / (111320 * Math.cos(state.near.lat * Math.PI / 180));
+    return L.latLngBounds(
+      [state.near.lat - dLat, state.near.lng - dLng],
+      [state.near.lat + dLat, state.near.lng + dLng]
+    );
+  }
+
+  function fitNear() {
+    var b = nearBounds();
+    if (!b) { fitAll(); return; }
+    var opts = fitPadding();
+    opts.maxZoom = 15;
+    map.fitBounds(b, opts);
+  }
+
+  function drawNear() {
+    if (!layerNear) return;
+    layerNear.clearLayers();
+    nearCircle = null;
+    if (state.mode !== 'near' || !state.near) return;
+    var c = [state.near.lat, state.near.lng];
+    nearCircle = L.circle(c, {
+      radius: state.nearRadius,
+      color: '#4F46E5', weight: 1.5, opacity: 0.8,
+      fillColor: '#6366F1', fillOpacity: 0.10,
+      interactive: false
+    }).addTo(layerNear);
+    var m = L.marker(c, { icon: nearIcon(), zIndexOffset: 1200, keyboard: false });
+    m.bindTooltip('기준 위치 · ' + esc(state.near.name) + ' (반경 ' + fmtDist(state.nearRadius) + ')', {
+      permanent: true, direction: 'top', offset: [0, -14], className: 'near-tip', opacity: 1
+    });
+    m.addTo(layerNear);
+  }
+
+  function nearNowText() {
+    if (!el.nearNow) return;
+    if (!state.near) {
+      el.nearNow.innerHTML = '아직 기준 위치가 없습니다. <b>내 위치(GPS)</b>·검색·지도 클릭 중 편한 방법으로 정해 주세요.';
+      return;
+    }
+    el.nearNow.innerHTML = '기준 위치 <b>' + esc(state.near.name) + '</b> · 반경 ' +
+      fmtDist(state.nearRadius) + ' 안의 맛집을 가까운 순으로 보여 줍니다.';
+  }
+
+  function setNear(place, opts) {
+    if (!place || !isFinite(place.lat) || !isFinite(place.lng)) {
+      toast('위치를 찾지 못했습니다. 다른 이름으로 검색하거나 지도를 눌러 주세요.');
+      return;
+    }
+    state.near = { name: place.name || '지정한 위치', lat: +place.lat, lng: +place.lng };
+    if (el.nearInput) el.nearInput.value = state.near.name;
+    saveNear();
+    clearPick();
+    if (state.mode !== 'near') setMode('near', true);
+    nearNowText();
+    renderSummary();
+    renderList();
+    renderMarkers();
+    drawNear();
+    if (!opts || opts.fit !== false) fitNear();
+    if (!opts || !opts.silent) toast('기준 위치를 ' + state.near.name + '으로 잡았습니다.');
+  }
+
+  function setNearRadius(r) {
+    state.nearRadius = r;
+    document.querySelectorAll('.seg-btn[data-nradius]').forEach(function (b) {
+      var on = parseInt(b.getAttribute('data-nradius'), 10) === r;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    saveNear();
+    if (state.mode === 'near') {
+      nearNowText();
+      drawNear();
+      renderSummary();
+      renderList();
+      renderMarkers();
+      fitNear();
+    }
+  }
+
+  function useNearGps() {
+    if (!navigator.geolocation) {
+      toast('이 브라우저에서는 현재 위치를 쓸 수 없습니다. 장소를 검색하거나 지도를 눌러 지정해 주세요.', 4200);
+      return;
+    }
+    toast('현재 위치를 확인하는 중…');
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      setNear({ name: '현재 위치', lat: pos.coords.latitude, lng: pos.coords.longitude });
+    }, function (err) {
+      var m = '현재 위치를 가져오지 못했습니다. ';
+      if (err && err.code === 1) m += '브라우저·휴대폰에서 위치 권한을 “허용”으로 바꾼 뒤 다시 눌러 주세요.';
+      else if (err && err.code === 3) m += '시간이 초과됐습니다. 잠시 뒤 다시 누르거나 장소를 검색해 주세요.';
+      else m += '신호가 약합니다. 장소를 검색하거나 지도를 눌러 지정해 주세요.';
+      toast(m, 5200);
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+  }
+
+  /* 기본 위치 검색(내 주변): 내장 지명 → 카카오(키 있을 때) → Nominatim */
+  function bindNearSearch() {
+    var input = el.nearInput, box = el.nearResults;
+    if (!input || !box) return;
+    var timer = null;
+    var NO_KEY_NOTE = '상호명 검색을 쓰려면 카카오 키를 한 번만 입력해 주세요. (지금은 주요 지명·주소 검색으로 동작합니다)';
+
+    function show(items, note) {
+      if (!items.length && !note) { box.hidden = true; box.innerHTML = ''; return; }
+      var html = items.map(function (it, i) {
+        return '<button type="button" data-i="' + i + '"><span class="r-name">' + esc(it.name) +
+          '</span><span class="r-meta">' + esc(it.meta || '') + '</span></button>';
+      }).join('');
+      if (note) html += '<div class="r-hint">' + note + '</div>';
+      box.innerHTML = html;
+      box.hidden = false;
+      box._items = items;
+    }
+
+    function merge(base, extra) {
+      extra.forEach(function (r) {
+        if (!isFinite(r.lat) || !isFinite(r.lng)) return;
+        if (!base.some(function (m) { return haversine([m.lat, m.lng], [r.lat, r.lng]) < 80; })) base.push(r);
+      });
+      return base;
+    }
+
+    input.addEventListener('input', function () {
+      var q = input.value.trim();
+      clearTimeout(timer);
+      if (q.length < 1) { box.hidden = true; return; }
+      show(localMatches(q));
+      timer = setTimeout(function () {
+        var base = localMatches(q);
+        if (kakaoKey()) {
+          kakaoSearch(q).then(function (res) {
+            if (input.value.trim() !== q) return;
+            if (res.ok) {
+              var items = merge(base, res.items.map(kakaoEndpoint));
+              show(items.slice(0, 8), items.length ? '' : '카카오에서 찾은 곳이 없습니다. 다른 이름으로 검색하거나 지도를 직접 눌러 주세요.');
+              return;
+            }
+            var note = kakaoErrorNote(res);
+            nominatim(q).then(function (remote) {
+              if (input.value.trim() !== q) return;
+              show(merge(base, remote).slice(0, 8), note);
+            });
+          });
+          return;
+        }
+        nominatim(q).then(function (remote) {
+          if (input.value.trim() !== q) return;
+          var merged = merge(base, remote);
+          show(merged.slice(0, 7), merged.length ? '' : NO_KEY_NOTE);
+        });
+      }, 420);
+    });
+
+    function pick(i) {
+      var it = (box._items || [])[i];
+      if (!it) return;
+      box.hidden = true;
+      setNear(it);
+    }
+
+    box.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-i]');
+      if (btn) pick(parseInt(btn.getAttribute('data-i'), 10));
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && box._items && box._items.length) { e.preventDefault(); pick(0); }
+      if (e.key === 'Escape') box.hidden = true;
+    });
+    input.addEventListener('blur', function () {
+      setTimeout(function () { box.hidden = true; }, 160);
+    });
+  }
+
   /* ── 필터/렌더 ─────────────────────────────────── */
   function computed() {
     return state.data.map(function (r) {
-      var rec = { r: r, dist: null, along: null };
+      var rec = { r: r, dist: null, along: null, near: null };
       if (state.route) {
         var p = projectToLine([r.lat, r.lng], state.route.line);
         rec.dist = p.dist;
         rec.along = p.along;
       }
+      if (state.near) rec.near = haversine([state.near.lat, state.near.lng], [r.lat, r.lng]);
       return rec;
     });
   }
@@ -811,6 +1028,10 @@
       if (state.foodGroup === 'cafe' && r.categoryGroup !== 'cafe') return false;
       if (state.foodGroup === 'meal' && r.categoryGroup === 'cafe') return false;
       if (state.foodGroup !== 'cafe' && state.cats.length && state.cats.indexOf(r.category) < 0) return false;
+      if (state.mode === 'near') {
+        if (!state.near || rec.near == null) return false;
+        return rec.near <= state.nearRadius;
+      }
       if (state.mode === 'district') {
         return state.district === 'all' || r.district === state.district;
       }
@@ -819,7 +1040,11 @@
       }
       return true;
     });
-    if (state.mode === 'route' && state.route) {
+    if (state.mode === 'near') {
+      out.sort(function (a, b) { return (a.near == null ? 1e12 : a.near) - (b.near == null ? 1e12 : b.near); });
+    } else if (state.mode === 'route' && state.route && state.routeSort === 'near') {
+      out.sort(function (a, b) { return (a.dist == null ? 1e12 : a.dist) - (b.dist == null ? 1e12 : b.dist); });
+    } else if (state.mode === 'route' && state.route) {
       out.sort(function (a, b) { return (a.along || 0) - (b.along || 0); });
     } else {
       out.sort(function (a, b) { return a.r.name.localeCompare(b.r.name, 'ko'); });
@@ -861,25 +1086,42 @@
     updateFiltersSummary();
     var rows = visible();
     el.resultCount.textContent = rows.length + '곳';
-    el.listTitle.textContent = state.mode === 'district'
-      ? (state.district === 'all' ? '지역구 전체 맛집' : state.district + ' 맛집')
-      : '동선 위 맛집';
-    el.sortNote.textContent = state.mode === 'route'
-      ? (state.route ? (state.travel === 'car' ? '출발→도착 순' : '축 진행 순') : '')
-      : '이름 순';
+    if (state.mode === 'near') {
+      el.listTitle.textContent = '내 주변 맛집';
+      if (el.nearCount) el.nearCount.textContent = '반경 내 ' + rows.length + '곳';
+      el.sortNote.textContent = '가까운 순';
+      el.sortNote.disabled = true;
+      el.sortNote.classList.add('static');
+    } else if (state.mode === 'district') {
+      el.listTitle.textContent = state.district === 'all' ? '지역구 전체 맛집' : state.district + ' 맛집';
+      el.sortNote.textContent = '이름 순';
+      el.sortNote.disabled = true;
+      el.sortNote.classList.add('static');
+    } else {
+      el.listTitle.textContent = '동선 위 맛집';
+      el.sortNote.disabled = !state.route;
+      el.sortNote.classList.toggle('static', !state.route);
+      el.sortNote.textContent = state.route
+        ? (state.routeSort === 'near' ? '경로에서 가까운 순 ⇄' : '출발→도착 순 ⇄')
+        : '';
+    }
     if (!rows.length) {
-      el.list.innerHTML = '<div class="empty">조건에 맞는 맛집이 없습니다.<br>' +
-        (state.mode === 'district' ? '다른 지역구를 골라 보세요.' : '반경을 넓히거나 업종 필터를 풀어 보세요.') + '</div>';
+      var hint = state.mode === 'near'
+        ? (state.near ? '반경을 넓혀 보거나 업종 필터를 풀어 보세요.' : '위에서 기준 위치를 먼저 정해 주세요.')
+        : state.mode === 'district' ? '다른 지역구를 골라 보세요.' : '반경을 넓히거나 업종 필터를 풀어 보세요.';
+      el.list.innerHTML = '<div class="empty">조건에 맞는 맛집이 없습니다.<br>' + hint + '</div>';
       return;
     }
     el.list.innerHTML = rows.map(function (rec, i) {
       var r = rec.r;
-      var distTxt = (state.mode !== 'route' || rec.dist == null) ? '' : '경로에서 ' + fmtDist(rec.dist);
+      var distTxt = '';
+      if (state.mode === 'near' && rec.near != null) distTxt = fmtDist(rec.near);
+      else if (state.mode === 'route' && rec.dist != null) distTxt = '경로에서 ' + fmtDist(rec.dist);
       return '<button type="button" class="card' + (state.selected === r.id ? ' sel' : '') + '" data-id="' + esc(r.id) + '">' +
         '<span class="card-top"><span class="card-order">' + (i + 1) + '</span>' +
         '<span class="card-name">' + esc(r.name) + '</span>' + badgeHtml(r) + '</span>' +
         '<span class="card-meta">' + esc(r.district) + '<span class="sep">·</span>' + esc(r.category) +
-        (distTxt ? '<span class="card-dist">' + distTxt + '</span>' : '') + '</span>' +
+        (distTxt ? '<span class="card-dist' + (state.mode === 'near' ? ' near' : '') + '">' + distTxt + '</span>' : '') + '</span>' +
         '</button>';
     }).join('');
   }
@@ -949,7 +1191,10 @@
   function updateFiltersSummary() {
     if (!el.filtersSummary) return;
     var parts = [];
-    if (state.mode === 'district') {
+    if (state.mode === 'near') {
+      parts.push(state.near ? state.near.name : '기준 위치 없음');
+      parts.push('반경 ' + fmtDist(state.nearRadius));
+    } else if (state.mode === 'district') {
       parts.push(state.district === 'all' ? '지역구 전체' : state.district);
     } else {
       parts.push(state.travel === 'car' ? '자동차' : '대중교통');
@@ -963,6 +1208,20 @@
 
   function renderSummary(msg) {
     if (msg) { el.summary.innerHTML = esc(msg); return; }
+    if (state.mode === 'near') {
+      if (!state.near) {
+        el.summary.innerHTML = '<b>내 주변 맛집</b><br>기준 위치를 정하면 반경 안의 맛집을 <b>가까운 순서</b>로 보여줍니다.<br>' +
+          '<span class="note">현재 내 위치(GPS) · 장소 검색 · 지도에서 직접 찍기 중에 고르세요.</span>';
+        return;
+      }
+      var n = visible().length;
+      el.summary.innerHTML =
+        '<b>' + esc(state.near.name) + '</b> 반경 <b>' + fmtDist(state.nearRadius) + '</b> 맛집 <b>' + n + '곳</b><br>' +
+        '기준 위치에서 가까운 순서로 보여 줍니다.' +
+        (n === 0 ? '<br><span class="err">반경을 넓혀 보세요(5km).</span>' : '') +
+        '<br><span class="note">기준 위치는 오른쪽 위 지도 핀입니다. 다른 지점으로 바꾸려면 다시 검색하거나 지도를 누르세요.</span>';
+      return;
+    }
     if (state.mode === 'district') {
       var n = visible().length;
       el.summary.innerHTML =
@@ -1422,7 +1681,7 @@
       b.hidden = b.getAttribute('data-mode-block') !== mode;
     });
     if (el.filtersToggle) {
-      var routeOnly = mode === 'district';
+      var routeOnly = mode !== 'route';
       el.filtersToggle.hidden = routeOnly;
       if (routeOnly) {
         el.filters.classList.remove('open');
@@ -1432,14 +1691,25 @@
     }
     if (mode === 'district') {
       layerRoute.clearLayers();
+      drawNear();
       el.district.value = state.district;
       renderSummary();
       renderList();
       renderMarkers();
       if (!silent) fitDistrict();
+    } else if (mode === 'near') {
+      layerRoute.clearLayers();
+      layerHubs.clearLayers();
+      nearNowText();
+      drawNear();
+      renderSummary();
+      renderList();
+      renderMarkers();
+      if (!silent) fitNear();
     } else {
       drawRoute(state.route);
       drawHubs();
+      drawNear();
       renderSummary();
       renderList();
       renderMarkers();
@@ -1515,6 +1785,30 @@
       if (!state.start) { setEndpoint('start', hub); toast('출발지를 ' + hub.name + '으로 지정했습니다.'); }
       else { setEndpoint('end', hub); toast('도착지를 ' + hub.name + '으로 지정했습니다.'); }
     });
+
+    if (el.nearGps) el.nearGps.addEventListener('click', useNearGps);
+    if (el.nearPick) el.nearPick.addEventListener('click', function () { startPick('near'); });
+    if (el.nearHubs) {
+      el.nearHubs.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-near-hub]');
+        if (!b) return;
+        var hub = HUBS[parseInt(b.getAttribute('data-near-hub'), 10)];
+        if (hub) setNear({ name: hub.name + ' 근처', lat: hub.lat, lng: hub.lng });
+      });
+    }
+    document.querySelectorAll('.seg-btn[data-nradius]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        setNearRadius(parseInt(b.getAttribute('data-nradius'), 10));
+      });
+    });
+    if (el.sortNote) {
+      el.sortNote.addEventListener('click', function () {
+        if (state.mode !== 'route' || !state.route) return;
+        state.routeSort = state.routeSort === 'near' ? 'along' : 'near';
+        renderList();
+        renderMarkers();
+      });
+    }
 
     document.querySelectorAll('.seg-btn[data-travel]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -1620,6 +1914,7 @@
 
     el.fitRoute.addEventListener('click', function () {
       if (state.mode === 'district') fitDistrict();
+      else if (state.mode === 'near') fitNear();
       else if (state.route) fitRouteView();
       else fitAll();
     });
@@ -1645,9 +1940,15 @@
   }
 
   function renderHubs() {
-    el.hubChips.innerHTML = HUBS.map(function (h, i) {
+    var html = HUBS.map(function (h, i) {
       return '<button type="button" class="chip" data-hub="' + i + '">' + esc(h.name) + '</button>';
     }).join('');
+    el.hubChips.innerHTML = html;
+    if (el.nearHubs) {
+      el.nearHubs.innerHTML = HUBS.map(function (h, i) {
+        return '<button type="button" class="chip" data-near-hub="' + i + '">' + esc(h.name) + '</button>';
+      }).join('');
+    }
   }
 
   /* ── 모바일: 플로팅 상단 바 · 바텀시트 ────────────── */
@@ -1786,6 +2087,8 @@
       tierNoteFoot: $('tier-note-foot'), brandCount: $('brand-count'),
       hiddenLine: $('hidden-line'), hiddenNote: $('hidden-note'), hiddenRestore: $('hidden-restore'),
       addOpen: $('add-open'), addModal: $('add-modal'), addClose: $('add-close'), addCancel: $('add-cancel'),
+      nearInput: $('near-input'), nearResults: $('near-results'), nearPick: $('near-pick'),
+      nearGps: $('near-gps'), nearHubs: $('near-hubs'), nearNow: $('near-now'), nearCount: $('near-count'),
       addSearch: $('add-search'), addSearchBtn: $('add-search-btn'), addResults: $('add-results'),
       addSearchHint: $('add-search-hint'), addPhone: $('add-phone'),
       keyOpen: $('key-open'), kakaoKeyToggle: $('kakao-key-toggle'), kakaoKeyPanel: $('kakao-key-panel'),
@@ -1806,6 +2109,17 @@
     renderKeyState();
     bindSearch('start');
     bindSearch('end');
+    bindNearSearch();
+    /* 저장해 둔 내 주변 기준 위치·반경 복원 */
+    var savedNear = storeGet(LS_NEAR, null);
+    if (savedNear && savedNear.near && isFinite(savedNear.near.lat) && isFinite(savedNear.near.lng)) {
+      state.near = { name: savedNear.near.name || '지정한 위치', lat: +savedNear.near.lat, lng: +savedNear.near.lng };
+      if (el.nearInput) el.nearInput.value = state.near.name;
+    }
+    if (savedNear && [1000, 3000, 5000].indexOf(+savedNear.radius) >= 0) state.nearRadius = +savedNear.radius;
+    document.querySelectorAll('.seg-btn[data-nradius]').forEach(function (b) {
+      b.classList.toggle('active', parseInt(b.getAttribute('data-nradius'), 10) === state.nearRadius);
+    });
     setMode('route', true);
     loadData();
 
