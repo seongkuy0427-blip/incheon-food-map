@@ -1482,7 +1482,7 @@
     var input = kind === 'start' ? el.startInput : el.endInput;
     var box = kind === 'start' ? el.startResults : el.endResults;
     var timer = null;
-    var NO_KEY_NOTE = '상호명 검색을 쓰려면 카카오 키를 한 번만 입력해 주세요. (내 맛집 추가 → 카카오 상호명 검색 키)';
+    var NO_KEY_NOTE = '상호명 검색을 쓰려면 카카오 키를 한 번만 입력해 주세요. (맛집 추천 → 카카오 상호명 검색 키)';
 
     function show(items, note) {
       if (!items.length && !note) { box.hidden = true; box.innerHTML = ''; return; }
@@ -2340,7 +2340,7 @@
     '노포': { cls: 'b-nopo', text: '노포' },
     '국민맛집': { cls: 'b-gukmin', text: '국민맛집' },
     '찐후기': { cls: 'b-jjin', text: '찐후기' },
-    '내 맛집': { cls: 'b-rec', text: '내 맛집' },
+    '내 맛집': { cls: 'b-rec', text: '친구 추천' },
     '친구 추천': { cls: 'b-rec', text: '친구 추천' }
   };
   var TIER_BADGES = {
@@ -3343,7 +3343,7 @@
       closeAddModal();
       document.querySelector('.map-wrap').classList.add('picking');
       el.pickNote.hidden = false;
-      el.pickNote.innerHTML = '지도를 클릭해 <b>내 맛집 위치</b>를 찍으세요. (Esc로 취소)';
+      el.pickNote.innerHTML = '지도를 클릭해 <b>추천할 가게 위치</b>를 찍으세요. (Esc로 취소)';
       toast('지도를 클릭해 위치를 찍으세요.');
     });
     el.exportBtn.addEventListener('click', exportCustom);
