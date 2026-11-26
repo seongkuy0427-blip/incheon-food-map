@@ -1309,7 +1309,7 @@
     renderSummary();
     fitDistrict();
     openDetail(rec.id);
-    toast(name + '을(를) 내 맛집에 저장했습니다.');
+    toast(name + ' · 내 맛집에 저장했습니다.');
   }
 
   function deleteCustom(id) {
@@ -1341,7 +1341,7 @@
     renderList();
     renderMarkers();
     renderSummary();
-    toast(r.name + '을(를) 지도에서 숨겼습니다. 목록 위 \'복원\'으로 되살릴 수 있습니다.', 3600);
+    toast(r.name + ' · 지도에서 숨겼습니다. 목록 위 \'복원\'으로 되살릴 수 있습니다.', 3600);
   }
 
   function restoreHidden() {
