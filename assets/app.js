@@ -525,12 +525,6 @@
         note.innerHTML = '📱 지금은 <b>이 기기에만</b> 저장됩니다. 공용 DB 주소를 넣으면 친구들과 실시간으로 함께 씁니다.';
       }
     }
-    var hint = el.recHint;
-    if (hint) {
-      hint.innerHTML = state.source === 'firebase' && !state.dbError
-        ? '친구가 고른 집이 실시간으로 쌓입니다. 이름을 누르면 그 친구 추천만 모아 봅니다.'
-        : '친구가 고른 집이 여기에 쌓입니다. 이름을 누르면 그 친구 추천만 모아 봅니다.';
-    }
   }
 
   /* ── 카카오 로컬(상호명) 검색 ─────────────────────
@@ -998,7 +992,6 @@
     if (el.kakaoZoom) el.kakaoZoom.hidden = engineState.kind !== 'kakao';
     document.body.classList.toggle('engine-kakao', engineState.kind === 'kakao');
     document.body.classList.toggle('engine-leaflet', engineState.kind !== 'kakao');
-    if (el.keyOpen) el.keyOpen.classList.toggle('on', !!(kakaoJsKey() || kakaoKey()));
   }
 
   /* 카카오맵 저작권 로고(ⓐ map.kakao.com)는 왼쪽 아래에 그려지는데, 떠 있는 패널·바텀시트에
@@ -1453,12 +1446,18 @@
         ' aria-pressed="' + (on ? 'true' : 'false') + '">' + recMedal(i) + esc(n) + ' <b>' + stats.counts[n] + '</b></button>';
     });
     el.recChips.innerHTML = html;
+    el.recChips.hidden = !stats.total;   /* 추천이 없으면 칩 줄은 비워 두고 안내만 */
     if (el.recCount) {
       el.recCount.textContent = stats.total
         ? '추천 ' + stats.total + '곳 · 친구 ' + names.length + '명'
         : '아직 추천 없음';
     }
     if (el.recBlock) el.recBlock.classList.toggle('has-recs', stats.total > 0);
+    if (el.recHint) {
+      el.recHint.textContent = stats.total
+        ? '이름을 누르면 그 친구 추천만 모아 보고 창이 닫힙니다.'
+        : '아직 추천이 없습니다. 아래에서 첫 번째로 등록해 보세요.';
+    }
   }
 
   function updateCustomCount() {
@@ -2353,6 +2352,40 @@
     return out;
   }
 
+  /* 필터가 켜져 있을 때만 목록 위에 뜨는 배너 */
+  function renderRecFilterBanner(n) {
+    if (!el.recFilterBanner) return;
+    if (!state.recFilter) {
+      el.recFilterBanner.hidden = true;
+      if (el.recFilterText) el.recFilterText.innerHTML = '';
+      return;
+    }
+    el.recFilterBanner.hidden = false;
+    if (el.recFilterText) {
+      el.recFilterText.innerHTML = '🏆 <b>' + esc(state.recFilter) + '</b> 님 추천 <b>' + n + '</b>곳';
+    }
+  }
+
+  /* 한 사람 추천만 모아 보기 — 모달 칩과 목록 위 배너가 같이 쓴다 */
+  function setRecFilter(name) {
+    state.recFilter = name || null;
+    state.selected = null;
+    renderRecBar();
+    renderList();
+    renderMarkers();
+    renderSummary();
+    updateFiltersSummary();
+    if (isMobile() && sheetState.idx < 1) snapSheet(1);
+    if (state.recFilter) {
+      toast('🏆 ' + state.recFilter + ' 님 추천만 모아 봅니다.', 2400);
+      fitRecFilter();
+    } else if (state.mode === 'district') fitDistrict();
+    else if (state.mode === 'near') fitNear();
+    else if (state.mode === 'subway') fitSubway();
+    else if (state.route) fitRouteView();
+    else fitAll();
+  }
+
   function byName(a, b) { return a.r.name.localeCompare(b.r.name, 'ko'); }
 
   /* 추천·인기순: 미쉐린 > 블루리본 > 백년가게 > 방송맛집 > 노포 > 국민맛집 > 찐후기·내 맛집
@@ -2411,7 +2444,7 @@
     return '<span class="badge ' + m.cls + '"' + title + '>' + esc(m.text) + '</span>';
   }
 
-  /* '성규 추천' 배지 — 여러 명이면 두 명까지 + 외 N명 */
+  /* '○○ 추천' 배지 — 여러 명이면 두 명까지 + 외 N명 */
   function recBadgeHtml(r, max) {
     var names = r.recommenders || [];
     if (!names.length) return '';
@@ -2434,9 +2467,8 @@
     updateFiltersSummary();
     var rows = visible();
     el.resultCount.textContent = rows.length + '곳';
-    if (state.recFilter) {
-      el.listTitle.textContent = '🏆 ' + state.recFilter + ' 추천';
-    } else if (state.mode === 'near') {
+    renderRecFilterBanner(rows.length);
+    if (state.mode === 'near') {
       el.listTitle.textContent = '내 주변 맛집';
       if (el.nearCount) el.nearCount.textContent = '반경 내 ' + rows.length + '곳';
     } else if (state.mode === 'district') {
@@ -2599,6 +2631,8 @@
   }
 
   function renderSummary(msg) {
+    var sumBlock = el.summary.closest('.summary-block');
+    if (sumBlock) sumBlock.hidden = !!state.recFilter && !msg;   /* 필터 중에는 목록 위 배너가 그 역할을 한다 */
     if (msg) { el.summary.innerHTML = esc(msg); return; }
     if (state.recFilter) {
       var rn = visible().length;
@@ -2805,6 +2839,7 @@
     el.addModal.hidden = false;
     document.body.style.overflow = 'hidden';
     updateCustomCount();
+    renderRecBar();
     updateShareState();
     renderKeyState();
     setKeyPanel(false);
@@ -2871,7 +2906,7 @@
     if (el.kakaoKeyInput) el.kakaoKeyInput.value = '';
     if (el.kakaoJsKeyState) {
       el.kakaoJsKeyState.textContent = localJs ? '저장됨 · 끝 ' + localJs.slice(-4)
-        : js ? '앱 설정 · 끝 ' + js.slice(-4) : '미등록';
+        : js ? '기본 키 적용됨' : '미등록';
       el.kakaoJsKeyState.classList.toggle('on', !!js);
     }
     if (el.kakaoJsKeyClear) el.kakaoJsKeyClear.hidden = !localJs;
@@ -2883,7 +2918,6 @@
           ? '카카오맵 상호명 검색 사용 중 — 가게 이름만 넣고 검색하세요.'
           : '키 없이도 주소로 찾을 수 있습니다. 카카오 키를 넣으면 상호명으로 바로 찾습니다.';
     }
-    if (el.keyOpen) el.keyOpen.classList.toggle('on', !!(key || js));
     updateEngineUi();
   }
 
@@ -2893,11 +2927,6 @@
     el.kakaoKeyToggle.classList.toggle('open', open);
     el.kakaoKeyToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) setTimeout(function () { el.kakaoKeyInput.focus(); }, 80);
-  }
-
-  function openKeyPanel() {
-    openAddModal();
-    setKeyPanel(true);
   }
 
   function saveKeyFromInput() {
@@ -3327,7 +3356,6 @@
     el.addOpen.addEventListener('click', function () { openAddModal(); });
     var addOpen2 = $('add-open-2');
     if (addOpen2) addOpen2.addEventListener('click', function () { openAddModal(); });
-    if (el.keyOpen) el.keyOpen.addEventListener('click', openKeyPanel);
     if (el.kakaoKeyToggle) {
       el.kakaoKeyToggle.addEventListener('click', function () {
         setKeyPanel(el.kakaoKeyPanel.hidden);
@@ -3371,20 +3399,13 @@
         var b = e.target.closest('button[data-rec]');
         if (!b) return;
         var v = b.getAttribute('data-rec');
-        state.recFilter = v === '__all' ? null : v;
-        state.selected = null;
-        renderRecBar();
-        renderList();
-        renderMarkers();
-        renderSummary();
-        updateFiltersSummary();
-        if (isMobile() && sheetState.idx < 1) snapSheet(1);
-        if (state.recFilter) fitRecFilter();
-        else if (state.mode === 'district') fitDistrict();
-        else if (state.mode === 'near') fitNear();
-        else if (state.mode === 'subway') fitSubway();
-        else if (state.route) fitRouteView();
+        /* 모달에서 고르면 필터만 적용하고 창은 닫아 지도·목록을 바로 보여 준다 */
+        closeAddModal();
+        setRecFilter(v === '__all' ? null : v);
       });
+    }
+    if (el.recFilterClear) {
+      el.recFilterClear.addEventListener('click', function () { setRecFilter(null); });
     }
     el.addResults.addEventListener('click', function (e) {
       var b = e.target.closest('button[data-i]');
@@ -3795,7 +3816,7 @@
       nearGps: $('near-gps'), nearHubs: $('near-hubs'), nearNow: $('near-now'), nearCount: $('near-count'),
       addSearch: $('add-search'), addSearchBtn: $('add-search-btn'), addResults: $('add-results'),
       addSearchHint: $('add-search-hint'), addPhone: $('add-phone'),
-      keyOpen: $('key-open'), kakaoKeyToggle: $('kakao-key-toggle'), kakaoKeyPanel: $('kakao-key-panel'),
+      keyOpen: null, kakaoKeyToggle: $('kakao-key-toggle'), kakaoKeyPanel: $('kakao-key-panel'),
       kakaoKeyInput: $('kakao-key-input'), kakaoKeyState: $('kakao-key-state'),
       kakaoKeySave: $('kakao-key-save'), kakaoKeyClear: $('kakao-key-clear'),
       kakaoJsKeyInput: $('kakao-js-key-input'), kakaoJsKeyState: $('kakao-js-key-state'),
@@ -3806,7 +3827,8 @@
       addNick: $('add-nick'), addNote: $('add-note'), addPicked: $('add-picked'),
       addSave: $('add-save'), exportBtn: $('export-btn'), importBtn: $('import-btn'), importFile: $('import-file'),
       customCount: $('custom-count'),
-      recBlock: $('rec-block'), recChips: $('rec-chips'), recCount: $('rec-count'), recHint: $('rec-hint')
+      recBlock: $('rec-block'), recChips: $('rec-chips'), recCount: $('rec-count'), recHint: $('rec-hint'),
+      recFilterBanner: $('rec-filter-banner'), recFilterText: $('rec-filter-text'), recFilterClear: $('rec-filter-clear')
     };
 
     renderHubs();

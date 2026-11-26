@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="assets/style.css?v=10" />
+<link rel="stylesheet" href="assets/style.css?v=11" />
 </head>
 <body>
 <div id="app">
@@ -33,9 +33,6 @@
       </div>
     </div>
     <div class="topbar-right">
-      <button class="key-btn" id="key-open" type="button" title="카카오 키 (상호명 검색 REST 키 · 지도 JavaScript 키, 내 기기에만 저장)">
-        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M17 6l2.5 2.5M14.5 8.5L17 11"/></svg></span><span class="lbl">카카오 키</span>
-      </button>
       <button class="add-btn" id="add-open" type="button">
         <span class="ico" aria-hidden="true">＋</span><span class="lbl">맛집 추천</span>
       </button>
@@ -156,15 +153,6 @@
         <div class="chips cat-chips" id="cat-chips" role="group" aria-label="식사 세부 업종"></div>
       </section>
 
-      <section class="block rec-block" id="rec-block">
-        <div class="block-head">
-          <h2>🏆 친구 추천 현황</h2>
-          <span class="count" id="rec-count"></span>
-        </div>
-        <div class="chips rec-chips" id="rec-chips" role="group" aria-label="추천한 친구별 보기"></div>
-        <p class="hint" id="rec-hint">친구가 고른 집이 여기에 쌓입니다. 이름을 누르면 그 친구 추천만 모아 봅니다.</p>
-      </section>
-
       <button class="filters-toggle" id="filters-toggle" type="button" aria-expanded="false">
         <span class="ft-label">필터</span><span class="filters-summary" id="filters-summary"></span><span class="caret">▾</span>
       </button>
@@ -208,6 +196,10 @@
         <div class="block-head">
           <h2 id="list-title">동선 위 맛집</h2>
           <div class="sort-switch" id="sort-switch" role="group" aria-label="목록 정렬"></div>
+        </div>
+        <div class="rec-filter-banner" id="rec-filter-banner" hidden>
+          <span class="rfb-text" id="rec-filter-text"></span>
+          <button class="rfb-clear" id="rec-filter-clear" type="button">전체 보기 ✕</button>
         </div>
         <div id="rest-list" class="rest-list"></div>
       </section>
@@ -257,9 +249,18 @@
     <h2 id="add-title">맛집 추천하기</h2>
     <p class="modal-sub">내 이름과 가게만 고르면 끝이에요. 한 줄 평은 짧게, 없어도 됩니다.</p>
 
+    <section class="rec-block in-modal" id="rec-block">
+      <div class="block-head">
+        <h2>🏆 친구 추천 현황</h2>
+        <span class="count" id="rec-count"></span>
+      </div>
+      <div class="chips rec-chips" id="rec-chips" role="group" aria-label="추천한 친구별 보기"></div>
+      <p class="hint" id="rec-hint">친구가 고른 집이 여기에 쌓입니다.</p>
+    </section>
+
     <label class="rec-field"><span class="lbl">내 이름 <span class="req">*</span></span>
-      <input id="add-nick" type="text" maxlength="12" placeholder="예: 성규" autocomplete="nickname" />
-      <em class="fld-note">이 이름으로 <b>성규 추천</b> 배지와 랭킹이 매겨집니다. 다음에 또 쓰도록 기억해 둡니다.</em>
+      <input id="add-nick" type="text" maxlength="12" placeholder="예: 홍길동" autocomplete="nickname" />
+      <em class="fld-note">이 이름으로 <b>추천 배지</b>와 랭킹이 매겨집니다. 다음에 또 쓰도록 기억해 둡니다.</em>
     </label>
 
     <div class="rec-field">
@@ -301,7 +302,7 @@
 
     <div class="key-box">
       <button type="button" class="key-toggle" id="kakao-key-toggle" aria-expanded="false" aria-controls="kakao-key-panel">
-        <span>카카오 키 <em>(내 기기에만 저장)</em></span>
+        <span>카카오 키 <em>고급 설정 · 내 기기에만 저장</em></span>
         <span class="key-state" id="kakao-key-state">미등록</span>
         <span class="caret" aria-hidden="true">▾</span>
       </button>
@@ -343,7 +344,7 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/config.js?v=9"></script>
-<script src="assets/app.js?v=14"></script>
+<script src="assets/config.js?v=10"></script>
+<script src="assets/app.js?v=15"></script>
 </body>
 </html>

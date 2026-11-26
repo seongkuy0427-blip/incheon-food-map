@@ -82,7 +82,7 @@ service cloud.firestore {
   "category": "국밥",
   "phone": "032-…",
   "note": "국물이 진해요",
-  "recommender": "성규",
+  "recommender": "홍길동",
   "placeRef": "k1975979696",
   "createdAt": "2026-11-27T01:23:45.000Z"
 }
@@ -110,4 +110,4 @@ service cloud.firestore {
 - `assets/config.js`의 `kakaoJsKey`는 **도메인 제한**이 걸린 공개 키입니다.
 - 카카오 디벨로퍼스 → **플랫폼 → Web 사이트 도메인**에 `https://seongkuy0427-blip.github.io` 가 있어야 지도·상호명 검색이 뜹니다.
 - `localhost`는 등록되어 있지 않으면 로컬 테스트에서 기본 지도(OSM)로 폴백합니다(정상 동작).
-- 브라우저의 `🔑 카카오 키`에 넣은 값이 있으면 그 값이 `config.js`보다 우선합니다.
+- 브라우저에 따로 넣은 키가 있으면(`＋ 맛집 추천` 모달 맨 아래 `카카오 키` 고급 설정) 그 값이 `config.js`보다 우선합니다.
