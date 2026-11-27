@@ -591,7 +591,10 @@
           : '공용 추천에 올리지 못했습니다.' + (err ? ' (' + err + ')' : ''), 5200);
         return;
       }
-      toast(nick + ' 이름으로 ' + ok.length + '곳을 공용 추천에 올렸습니다.' +
+      toast(nick + ' 이름으로 ' + ok.length + '곳을 ' +
+        (out.some(function (x) { return x.ok && x.res && x.res.mode === 'local-pending'; })
+          ? '이 기기에 보관했습니다. 연결이 돌아오면 자동으로 공유됩니다.'
+          : '공용 추천에 올렸습니다.') +
         (ok.length < todo.length ? ' 실패 ' + (todo.length - ok.length) + '곳은 다시 시도해 주세요.' : ''), 4200);
     });
   }
