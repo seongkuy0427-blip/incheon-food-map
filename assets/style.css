@@ -988,6 +988,24 @@ body[data-mode="subway"] .route-summary{
 .modal-card .rec-block .hint{margin-top:8px}
 .modal-card .rec-block .rec-chips{margin-top:8px}
 
+/* v11 — 이 기기에 예전에 저장한 맛집 이관 안내 카드 */
+.migrate-card{
+  margin:0 0 14px;padding:12px 13px 13px;border:1px dashed #C7D2FE;border-radius:14px;
+  background:linear-gradient(140deg,#FAFBFF 0%,#F2F4FF 100%);
+}
+.migrate-card[hidden]{display:none}
+.migrate-head{display:flex;align-items:flex-start;gap:9px}
+.migrate-ico{flex:0 0 auto;font-size:16px;line-height:1.25}
+.migrate-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.migrate-body b{font-size:12.5px;font-weight:750;color:#3730A3;letter-spacing:-.01em;line-height:1.4}
+.migrate-body em{
+  font-style:normal;font-size:11.5px;font-weight:620;color:#4338CA;line-height:1.45;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.migrate-note{margin:4px 0 0;font-size:10.5px;color:#6366F1;line-height:1.5}
+.migrate-btn{margin-top:9px;padding:10px 12px;font-size:12.5px;font-weight:700}
+.migrate-btn:disabled{opacity:.6;cursor:default}
+
 /* 필터가 켜져 있을 때만 목록 위에 뜨는 배너 */
 .rec-filter-banner{
   display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:9px 11px;

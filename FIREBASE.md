@@ -68,6 +68,7 @@ service cloud.firestore {
 - **주소가 공개**됩니다. 링크를 아는 사람은 누구나 목록을 읽고 등록할 수 있습니다.
 - **개인정보를 적지 마세요.** 한 줄 평에 전화번호·집주소 같은 내용을 넣지 않도록 안내했습니다.
 - **연결이 막혔을 때**: 앱은 추천을 `localStorage`에 보관하고(`incheonFoodMap.pending.v1`), 연결이 돌아오면 자동으로 Firestore에 올립니다. 규칙 만료로 잠깐 막혀도 친구들이 쓴 추천이 사라지지 않습니다.
+- **예전 기기 저장 맛집 이관(v11)**: 공용 DB를 쓰기 전에 이 기기에만 저장해 둔 가게(`incheonFoodMap.custom.v1` · `incheonFoodMap.recs.v1`)는 `＋ 맛집 추천` 모달의 `📦` 안내 카드에서 **한 번에** 올릴 수 있습니다. 끝난 가게는 `incheonFoodMap.migrated.v1`에 `placeKey`로 기록되어 다시 안내가 뜨지 않습니다.
 - Firestore 무료(Spark) 한도: 하루 읽기 5만·쓰기 2만·삭제 2만 건. 친구 몇 명이 쓰는 규모에서는 충분합니다.
 
 ## 앱이 쓰는 문서 모양

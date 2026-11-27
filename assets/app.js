@@ -27,6 +27,7 @@
   var LS_LEGACY_CUSTOM = 'incheonFoodMap.custom.v1';  /* v8 이전 '내 맛집' */
   var LS_NICK = 'incheonFoodMap.nick.v1';             /* 내가 마지막으로 쓴 이름 */
   var LS_PENDING = 'incheonFoodMap.pending.v1';       /* DB가 막혔을 때 올리지 못한 추천 */
+  var LS_MIGRATED = 'incheonFoodMap.migrated.v1';     /* 예전 기기 저장 맛집 → 공용 추천 이관 완료 기록 */
   var LS_HIDDEN = 'incheonFoodMap.hidden.v1';
   var LS_NEAR = 'incheonFoodMap.near.v1';
   var LS_SUBWAY = 'incheonFoodMap.subway.v1';
@@ -125,6 +126,7 @@
     myNick: '',
     justAddedId: '',        /* 방금 등록한 추천(같은 이름 오타라도 바로 지울 수 있게) */
     source: 'local',        /* local | firebase */
+    dbReady: false,         /* 공용 DB 목록을 한 번이라도 받았는지 */
     db: null,
     dbError: '',
     data: [],
@@ -415,6 +417,185 @@
     return Promise.resolve({ ok: true });
   }
 
+  /* ── 예전 기기 저장 맛집 → 공용 추천 이관 (v11) ──────────
+     v9 이전 '내 맛집'은 incheonFoodMap.custom.v1, v9.x 로컬 모드 추천은
+     incheonFoodMap.recs.v1 에 이 기에만 쌓였다. 공용 DB로 돌아서면 그 가게들이
+     어디에도 없어 보이므로, 아직 공용 DB에 없는 것만 모달에서 한 번에 올린다. */
+  function legacyMigratedKeys() {
+    var v = storeGet(LS_MIGRATED, []);
+    return Array.isArray(v) ? v.filter(function (x) { return typeof x === 'string' && x; }) : [];
+  }
+
+  function markMigrated(recs) {
+    if (!recs || !recs.length) return;
+    var keys = legacyMigratedKeys();
+    recs.forEach(function (rec) {
+      var pk = placeKey(rec.name, rec.lat, rec.lng);
+      if (keys.indexOf(pk) < 0) keys.push(pk);
+    });
+    storeSet(LS_MIGRATED, keys);
+  }
+
+  /* 이 기기에만 남아 있는 예전 가게 목록 — custom.v1(구 '내 맛집') + recs.v1(공용 전 로컬 추천) */
+  function legacySavedItems() {
+    var out = [], seen = {};
+
+    function push(raw) {
+      if (!raw || !raw.name) return;
+      var lat = parseFloat(raw.lat), lng = parseFloat(raw.lng);
+      if (!isFinite(lat) || !isFinite(lng)) return;
+      var rec = raw.recommender ? normalizeRecs([raw])[0] : legacyToRec(raw, state.myNick || '나');
+      if (!rec) return;
+      var pk = placeKey(rec.name, rec.lat, rec.lng);
+      if (seen[pk]) return;
+      seen[pk] = 1;
+      out.push({ rec: rec, key: pk });
+    }
+
+    var custom = storeGet(LS_LEGACY_CUSTOM, []);
+    if (Array.isArray(custom)) custom.forEach(push);
+    /* recs.v1 은 공용 DB를 쓰기 전 이 기기에 쌓인 추천 — 공용 DB가 있을 때만 옛 저장으로 본다 */
+    if (firebaseConfig()) {
+      var local = storeGet(LS_RECS, []);
+      if (Array.isArray(local)) local.forEach(push);
+    }
+    return out;
+  }
+
+  /* 이미 공용 DB(shared_places)에 같은 placeKey, 또는 같은 이름+근접 좌표로 올라갔는지 */
+  function isOnSharedDb(rec, list) {
+    var pk = placeKey(rec.name, rec.lat, rec.lng);
+    var nn = normName(rec.name);
+    for (var i = 0; i < list.length; i++) {
+      var x = list[i];
+      if (placeKey(x.name, x.lat, x.lng) === pk) return true;
+      if (normName(x.name) === nn && haversine([x.lat, x.lng], [rec.lat, rec.lng]) <= 60) return true;
+    }
+    return false;
+  }
+
+  /* 아직 공용 DB로 올리지 않은 예전 가게 — 안내 카드와 일괄 이관이 함께 쓴다 */
+  function pendingLegacyRecs() {
+    if (!firebaseConfig()) return [];              /* 공용 DB가 없으면 이관할 곳이 없다 */
+    if (!state.dbReady && !state.dbError) return []; /* 공용 목록을 받기 전에는 안내하지 않는다 */
+    var migrated = legacyMigratedKeys();
+    return legacySavedItems().filter(function (it) {
+      if (migrated.indexOf(it.key) >= 0) return false;
+      return !isOnSharedDb(it.rec, state.recs);
+    }).map(function (it) { return it.rec; });
+  }
+
+  /* 이관을 마친 가게는 예전 목록(custom.v1)에서 정리한다 — 이제 공용 DB에 있다 */
+  function pruneLegacyCustom(recs) {
+    var custom = storeGet(LS_LEGACY_CUSTOM, []);
+    if (!Array.isArray(custom) || !custom.length) return;
+    var keys = {};
+    recs.forEach(function (r) { keys[placeKey(r.name, r.lat, r.lng)] = 1; });
+    var left = custom.filter(function (r) {
+      if (!r || !r.name) return false;
+      var lat = parseFloat(r.lat), lng = parseFloat(r.lng);
+      if (!isFinite(lat) || !isFinite(lng)) return false;
+      return !keys[placeKey(r.name, lat, lng)];
+    });
+    if (left.length !== custom.length) storeSet(LS_LEGACY_CUSTOM, left);
+  }
+
+  function legacyPreviewText(recs) {
+    if (!recs.length) return '';
+    return recs.length > 1 ? recs[0].name + ' 외 ' + (recs.length - 1) + '곳' : recs[0].name;
+  }
+
+  function renderLegacyCard() {
+    if (!el.legacyCard) return;
+    var recs = pendingLegacyRecs();
+    el.legacyCard.hidden = !recs.length;
+    if (!recs.length) return;
+    if (el.legacyTitle) el.legacyTitle.textContent = '이 기기에 예전에 저장한 맛집 ' + recs.length + '곳이 있어요';
+    if (el.legacyPreview) {
+      el.legacyPreview.textContent = legacyPreviewText(recs);
+      el.legacyPreview.title = recs.map(function (r) { return r.name; }).join(', ');
+    }
+    if (el.legacyBtn) {
+      el.legacyBtn.disabled = false;
+      el.legacyBtn.textContent = '내 이름으로 공용 추천에 올리기';
+    }
+  }
+
+  var migratingLegacy = false;
+  function migrateLegacy() {
+    if (migratingLegacy) return;
+    var nick = (el.addNick.value || '').trim();
+    if (!nick) {
+      toast('먼저 내 이름을 입력해 주세요.', 3200);
+      el.addNick.focus();
+      return;
+    }
+    if (nick.length > 12) { toast('이름은 12자까지만 쓸 수 있습니다.'); el.addNick.focus(); return; }
+
+    var recs = pendingLegacyRecs();
+    if (!recs.length) { renderLegacyCard(); toast('이미 모두 공용 추천에 있습니다.'); return; }
+
+    /* 같은 집을 같은 이름으로 이미 올린 추천은 건너뛴다(중복 방지) */
+    var skipped = [];
+    var todo = recs.filter(function (rec) {
+      var pk = placeKey(rec.name, rec.lat, rec.lng);
+      var dup = state.recs.some(function (x) {
+        return String(x.recommender || '') === nick && placeKey(x.name, x.lat, x.lng) === pk;
+      });
+      if (dup) { skipped.push(rec); return false; }
+      return true;
+    });
+
+    state.myNick = nick;
+    storeSet(LS_NICK, nick);
+
+    if (!todo.length) {
+      markMigrated(skipped);
+      pruneLegacyCustom(skipped);
+      refreshRecUi();
+      renderLegacyCard();
+      toast('이미 모두 ' + nick + ' 이름으로 공용 추천에 있습니다.', 3600);
+      return;
+    }
+
+    var btn = el.legacyBtn, label = btn.textContent;
+    migratingLegacy = true;
+    btn.disabled = true;
+    btn.textContent = '올리는 중…';
+
+    var job = todo.map(function (rec) {
+      var c = {};
+      for (var k in rec) if (Object.prototype.hasOwnProperty.call(rec, k)) c[k] = rec[k];
+      c.id = '';
+      c.recommender = nick;
+      c.createdAt = rec.createdAt || new Date().toISOString();
+      return c;
+    });
+
+    Promise.all(job.map(function (rec) {
+      return writeRec(rec).then(function (res) { return { ok: !!(res && res.ok), rec: rec, res: res }; });
+    })).then(function (out) {
+      migratingLegacy = false;
+      btn.disabled = false;
+      btn.textContent = label;
+      var ok = out.filter(function (x) { return x.ok; }).map(function (x) { return x.rec; });
+      var handled = ok.concat(skipped);
+      if (handled.length) { markMigrated(handled); pruneLegacyCustom(handled); }
+      if (ok.length) { state.tiers.custom = true; state.recFilter = null; }
+      refreshRecUi();
+      renderLegacyCard();
+      if (!ok.length) {
+        var err = (out[0] && out[0].res && out[0].res.error) || '';
+        toast(err === 'not-ready'
+          ? '공용 DB에 연결하는 중입니다. 잠시 후 다시 눌러 주세요.'
+          : '공용 추천에 올리지 못했습니다.' + (err ? ' (' + err + ')' : ''), 5200);
+        return;
+      }
+      toast(nick + ' 이름으로 ' + ok.length + '곳을 공용 추천에 올렸습니다.' +
+        (ok.length < todo.length ? ' 실패 ' + (todo.length - ok.length) + '곳은 다시 시도해 주세요.' : ''), 4200);
+    });
+  }
+
   var loadScriptOnce = (function () {
     var slots = {};
     return function (src, id) {
@@ -444,6 +625,7 @@
     renderMarkers();
     renderSummary();
     updateCustomCount();
+    renderLegacyCard();
     updateShareState();
     if (el.brandCount) el.brandCount.textContent = state.data.length;
     var totalEl = $('data-total');
@@ -455,11 +637,13 @@
     if (!cfg) {
       state.source = 'local';
       state.db = null;
+      state.dbReady = false;
       loadLocalRecs();
       refreshRecUi();
       return Promise.resolve(false);
     }
     state.source = 'firebase';
+    state.dbReady = false;
     var cached = normalizeRecs(storeGet(LS_RECS_CACHE, []));
     if (cached.length) { state.recs = cached; refreshRecUi(); }
     return loadScriptOnce(FB_APP_SDK, 'firebase-app-sdk')
@@ -486,6 +670,7 @@
             state.recs = mergeRecLists(serverRecs, pendingRecs());
             state.source = 'firebase';
             state.dbError = '';
+            state.dbReady = true;
             refreshRecUi();
             flushPending();
             if (!settled) { settled = true; resolve(true); }
@@ -2840,6 +3025,7 @@
     document.body.style.overflow = 'hidden';
     updateCustomCount();
     renderRecBar();
+    renderLegacyCard();
     updateShareState();
     renderKeyState();
     setKeyPanel(false);
@@ -3384,6 +3570,7 @@
     el.addClose.addEventListener('click', closeAddModal);
     el.addCancel.addEventListener('click', closeAddModal);
     el.addSave.addEventListener('click', saveRec);
+    if (el.legacyBtn) el.legacyBtn.addEventListener('click', migrateLegacy);
     el.addSearchBtn.addEventListener('click', runAddSearch);
     el.addSearch.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); runAddSearch(); }
@@ -3828,7 +4015,9 @@
       addSave: $('add-save'), exportBtn: $('export-btn'), importBtn: $('import-btn'), importFile: $('import-file'),
       customCount: $('custom-count'),
       recBlock: $('rec-block'), recChips: $('rec-chips'), recCount: $('rec-count'), recHint: $('rec-hint'),
-      recFilterBanner: $('rec-filter-banner'), recFilterText: $('rec-filter-text'), recFilterClear: $('rec-filter-clear')
+      recFilterBanner: $('rec-filter-banner'), recFilterText: $('rec-filter-text'), recFilterClear: $('rec-filter-clear'),
+      legacyCard: $('legacy-migrate'), legacyTitle: $('legacy-title'), legacyPreview: $('legacy-preview'),
+      legacyBtn: $('legacy-btn')
     };
 
     renderHubs();
